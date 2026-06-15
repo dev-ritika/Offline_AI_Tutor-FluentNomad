@@ -24,7 +24,7 @@ class HiveInitializerImpl implements HiveInitializer {
       ..registerAdapter(LlmModelInstallAdapter())
       ..registerAdapter(ModelInstallStatusEnumAdapter());
 
-    //await Hive.deleteBoxFromDisk(HiveBoxesNames.modeslInstallBox);
+    //  await Hive.deleteBoxFromDisk(HiveBoxesNames.modeslInstallBox);
 
     await Future.wait([
       Hive.openBox<UserDataModel>(HiveBoxesNames.userPrefsBox),
@@ -32,4 +32,3 @@ class HiveInitializerImpl implements HiveInitializer {
     ]);
   }
 }
-//fr_FR-upmc-medium.onnx

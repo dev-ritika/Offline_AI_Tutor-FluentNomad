@@ -34,10 +34,6 @@ class ModelsContainer extends StatelessWidget {
           separatorBuilder: (context, index) => const SizedBox(height: 20),
           itemCount: data.modelData?.models.length ?? 0,
           itemBuilder: (context, index) {
-            print(
-              "what is the perc ${modelInstallData?[index].installedPercentage}",
-            );
-
             return SelectableContainer(
               title:
                   "${(modelData?.models[index].displayName)}  ·  ${SizebytesConverter.getSize(modelData?.models[index].sizeBytes ?? 0)}",

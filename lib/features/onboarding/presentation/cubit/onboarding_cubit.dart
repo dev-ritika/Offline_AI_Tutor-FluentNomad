@@ -219,6 +219,8 @@ class OnboardingCubit extends Cubit<OnboardingState> {
       state.modelInstallData!,
     );
 
+    print("checkingggg ${downloadableModels}");
+
     // total bytes per model id  (Whisper = 1 file, tts = sum of all voice files)
     final Map<String, int> totalBytes = {};
     for (final m in downloadableModels) {
@@ -297,8 +299,12 @@ class OnboardingCubit extends Cubit<OnboardingState> {
 
         ///trial with localIndex
         downloadableModels[localIndex] = downloadableModels[index].copyWith(
-          installedPercentage: 100,
-          installedStatus: ModelInstallStatusEnum.Downloaded,
+          installedPercentage: uiModels[index].installedPercentage >= 100
+              ? 100
+              : 0,
+          installedStatus: uiModels[index].installedPercentage >= 100
+              ? ModelInstallStatusEnum.Downloaded
+              : ModelInstallStatusEnum.Queued,
         );
 
         print("is it updated $downloadableModels");
@@ -349,3 +355,6 @@ class OnboardingCubit extends Cubit<OnboardingState> {
     );
   }
 }
+//en_US-lessac-medium.onnx
+// url is repeating
+// on restart - if all downloaded redirect to home
