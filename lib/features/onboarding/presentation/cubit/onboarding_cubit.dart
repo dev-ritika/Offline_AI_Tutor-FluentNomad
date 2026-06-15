@@ -238,7 +238,7 @@ class OnboardingCubit extends Cubit<OnboardingState> {
       uiModels.add(
         m.copyWith(
           sizeInBytes: totalBytes[m.id]!,
-          installedPercentage: 0,
+          installedPercentage: m.installedPercentage,
           installedStatus: m.installedStatus,
         ),
       );
@@ -334,7 +334,7 @@ class OnboardingCubit extends Cubit<OnboardingState> {
 
         print("what is in local $r");
 
-        late bool allModelsInstalled;
+        late bool allModelsInstalled = true;
 
         for (var x in r) {
           if (x.installedPercentage < 100) {
