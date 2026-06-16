@@ -62,10 +62,13 @@ class OnboardingCubit extends Cubit<OnboardingState> {
   void goNext() {
     final next = state.currentStep.next;
 
-    if (next == OnboardingStepEnum.level) {
+    if (next == OnboardingStepEnum.level &&
+        (state.levelsList == null || (state.levelsList?.isEmpty ?? true))) {
+      print("levels loaded");
       loadLevels();
     }
-    if (next == OnboardingStepEnum.name) {
+    if (next == OnboardingStepEnum.name && (state.modelsData == null)) {
+      print("models loaded ${state.modelsData}");
       fetchModels();
     }
 
@@ -342,13 +345,19 @@ class OnboardingCubit extends Cubit<OnboardingState> {
 
         print("what is in local $r");
 
+        Map<String, dynamic> installationStatus = {};
+
         late bool allModelsInstalled = true;
 
         for (var x in r) {
-          if (x.installedPercentage < 100) {
+          installationStatus[x.id] = x.installedPercentage;
+        }
+
+        installationStatus.forEach((key, value) {
+          if (value < 100) {
             allModelsInstalled = false;
           }
-        }
+        });
 
         emit(state.copyWith(modelInstallData: r, installedAllModels: false));
 
