@@ -298,14 +298,16 @@ class OnboardingCubit extends Cubit<OnboardingState> {
         // i want if even all of the voices are downloaded - then perc for all should be 100
 
         ///trial with localIndex
-        downloadableModels[localIndex] = downloadableModels[index].copyWith(
-          installedPercentage: uiModels[index].installedPercentage >= 100
-              ? 100
-              : 0,
-          installedStatus: uiModels[index].installedPercentage >= 100
-              ? ModelInstallStatusEnum.Downloaded
-              : ModelInstallStatusEnum.Queued,
-        );
+        downloadableModels[localIndex] = downloadableModels[localIndex]
+            .copyWith(
+              installedPercentage: uiModels[index].installedPercentage >= 100
+                  ? 100
+                  : 0,
+              installedStatus: uiModels[index].installedPercentage >= 100
+                  ? ModelInstallStatusEnum.Downloaded
+                  : ModelInstallStatusEnum.Queued,
+              // id: downloadableModels[localIndex].id,
+            );
 
         print("is it updated $downloadableModels");
 
@@ -356,5 +358,4 @@ class OnboardingCubit extends Cubit<OnboardingState> {
   }
 }
 //en_US-lessac-medium.onnx
-// url is repeating
 // on restart - if all downloaded redirect to home
