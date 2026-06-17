@@ -18,6 +18,7 @@ import 'package:injectable/injectable.dart' as _i526;
 import 'package:offline_ai_tutor/core/dependency_injection/register_module.dart'
     as _i989;
 import 'package:offline_ai_tutor/core/network/dio_client.dart' as _i536;
+import 'package:offline_ai_tutor/core/network/downloader_client.dart' as _i998;
 import 'package:offline_ai_tutor/core/storage/hive/hive_boxes_module.dart'
     as _i998;
 import 'package:offline_ai_tutor/core/storage/hive/hive_initializer.dart'
@@ -96,6 +97,7 @@ extension GetItInjectableX on _i174.GetIt {
     final hiveBoxesModule = _$HiveBoxesModule();
     gh.lazySingleton<_i281.AssetBundle>(() => registerModule.assetBundle);
     gh.lazySingleton<_i536.DioClient>(() => _i536.DioClient());
+    gh.lazySingleton<_i998.DownloaderClient>(() => _i998.DownloaderClient());
     gh.lazySingleton<_i718.LanguagesParser>(() => _i718.LanguagesParser());
     gh.lazySingleton<_i314.HiveInitializer>(() => _i314.HiveInitializerImpl());
     gh.lazySingleton<_i738.Box<List<dynamic>>>(
@@ -141,6 +143,11 @@ extension GetItInjectableX on _i174.GetIt {
         languagesParser: gh<_i718.LanguagesParser>(),
       ),
     );
+    gh.lazySingleton<_i627.InstallModelDataSource>(
+      () => _i627.InstallModelDataSourceImpl(
+        downloaderClient: gh<_i998.DownloaderClient>(),
+      ),
+    );
     gh.lazySingleton<_i132.LLMModelDataSource>(
       () => _i132.LLMModelDataSourceImpl(dioClient: gh<_i536.DioClient>()),
     );
@@ -151,8 +158,10 @@ extension GetItInjectableX on _i174.GetIt {
         ),
       ),
     );
-    gh.lazySingleton<_i627.InstallModelDataSource>(
-      () => _i627.InstallModelDataSourceImpl(dioClient: gh<_i536.DioClient>()),
+    gh.lazySingleton<_i550.InstallModelRepository>(
+      () => _i325.InstallModelRepoImpl(
+        installModelDataSource: gh<_i627.InstallModelDataSource>(),
+      ),
     );
     gh.lazySingleton<_i333.LlmModelRepository>(
       () => _i309.LlmModelRepoImpl(
@@ -195,11 +204,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i247.SaveModelInstallStatus>(
       () => _i247.SaveModelInstallStatus(
         saveUserDataRepository: gh<_i255.SaveModelInstallStatusrepository>(),
-      ),
-    );
-    gh.lazySingleton<_i550.InstallModelRepository>(
-      () => _i325.InstallModelRepoImpl(
-        installModelDataSource: gh<_i627.InstallModelDataSource>(),
       ),
     );
     gh.lazySingleton<_i132.InstallModel>(

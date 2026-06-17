@@ -258,9 +258,12 @@ class OnboardingCubit extends Cubit<OnboardingState> {
       if (model.installedStatus != ModelInstallStatusEnum.Downloaded) {
         bool isError = false;
 
+        print("downloading model ${model.name}");
+
         await for (final result in installModel.call(model.url)) {
           result.fold(
             (l) {
+              print("is there any error $l");
               isError = true;
               emit(state.copyWith(error: l, status: StateStatusEnum.error));
             },
@@ -285,12 +288,20 @@ class OnboardingCubit extends Cubit<OnboardingState> {
                     : ModelInstallStatusEnum.Downloaded,
               );
 
+              print("am i here -1");
+
               emit(state.copyWith(modelInstallData: [...uiModels]));
+
+              print("am i here 0");
             },
           );
         }
 
+        print("am i here 1");
+
         if (isError) break; // stop BEFORE banking bytes
+
+        print("am i here 2");
 
         // file finished -> add its bytes to that model's running total
         receivedBytes[model.id] = receivedBytes[model.id]! + model.sizeInBytes;

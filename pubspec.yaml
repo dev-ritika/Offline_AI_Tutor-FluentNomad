@@ -50,6 +50,7 @@ dependencies:
   dio: ^5.9.2
   pretty_dio_logger: ^1.4.0
   path_provider: ^2.1.5
+  background_downloader: ^9.5.5
 
 dev_dependencies:
   flutter_test:
