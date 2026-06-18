@@ -9,25 +9,8 @@ import 'package:offline_ai_tutor/core/utils/helpers/container_color_model.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/utils/enums/model_install_status_enum.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/entities/model_install_data.dart';
 
-class ModelsContainer extends StatefulWidget {
+class ModelsContainer extends StatelessWidget {
   const ModelsContainer({super.key});
-
-  @override
-  State<ModelsContainer> createState() => _ModelsContainerState();
-}
-
-class _ModelsContainerState extends State<ModelsContainer> {
-  late AppLifecycleListener _listener = AppLifecycleListener();
-
-  @override
-  void initState() {
-    _listener = AppLifecycleListener(
-      onStateChange: (value) {
-        print(value);
-      },
-    );
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,8 +34,6 @@ class _ModelsContainerState extends State<ModelsContainer> {
           separatorBuilder: (context, index) => const SizedBox(height: 20),
           itemCount: data.modelData?.models.length ?? 0,
           itemBuilder: (context, index) {
-            print("percccc ${modelInstallData?[index].installedPercentage}");
-
             return SelectableContainer(
               title:
                   "${(modelData?.models[index].displayName)}  ·  ${SizebytesConverter.getSize(modelData?.models[index].sizeBytes ?? 0)}",

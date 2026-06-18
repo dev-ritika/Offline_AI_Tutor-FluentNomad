@@ -64,11 +64,9 @@ class OnboardingCubit extends Cubit<OnboardingState> {
 
     if (next == OnboardingStepEnum.level &&
         (state.levelsList == null || (state.levelsList?.isEmpty ?? true))) {
-      print("levels loaded");
       loadLevels();
     }
     if (next == OnboardingStepEnum.name && (state.modelsData == null)) {
-      print("models loaded ${state.modelsData}");
       fetchModels();
     }
 
@@ -222,8 +220,6 @@ class OnboardingCubit extends Cubit<OnboardingState> {
       state.modelInstallData!,
     );
 
-    print("checkingggg ${downloadableModels}");
-
     // total bytes per model id  (Whisper = 1 file, tts = sum of all voice files)
     final Map<String, int> totalBytes = {};
     for (final m in downloadableModels) {
@@ -258,12 +254,9 @@ class OnboardingCubit extends Cubit<OnboardingState> {
       if (model.installedStatus != ModelInstallStatusEnum.Downloaded) {
         bool isError = false;
 
-        print("downloading model ${model.name}");
-
         await for (final result in installModel.call(model.url)) {
           result.fold(
             (l) {
-              print("is there any error $l");
               isError = true;
               emit(state.copyWith(error: l, status: StateStatusEnum.error));
             },
@@ -288,29 +281,17 @@ class OnboardingCubit extends Cubit<OnboardingState> {
                     : ModelInstallStatusEnum.Downloaded,
               );
 
-              print("am i here -1");
-
               emit(state.copyWith(modelInstallData: [...uiModels]));
-
-              print("am i here 0");
             },
           );
         }
 
-        print("am i here 1");
-
         if (isError) break; // stop BEFORE banking bytes
-
-        print("am i here 2");
 
         // file finished -> add its bytes to that model's running total
         receivedBytes[model.id] = receivedBytes[model.id]! + model.sizeInBytes;
 
         //updating to keep in local
-        //working fine for first model but how to handle for voices
-        // i want if even one of the voices is not downloaded - then perc for all should be 0
-        // i want if even all of the voices are downloaded - then perc for all should be 100
-
         ///trial with localIndex
         downloadableModels[localIndex] = downloadableModels[localIndex]
             .copyWith(
@@ -322,8 +303,6 @@ class OnboardingCubit extends Cubit<OnboardingState> {
                   : ModelInstallStatusEnum.Queued,
               // id: downloadableModels[localIndex].id,
             );
-
-        print("is it updated $downloadableModels");
 
         final Either<Failures, bool> data = await saveModelInstallStatus.call(
           downloadableModels,
@@ -353,8 +332,6 @@ class OnboardingCubit extends Cubit<OnboardingState> {
         if (r.isEmpty) {
           return false;
         }
-
-        print("what is in local $r");
 
         Map<String, dynamic> installationStatus = {};
 

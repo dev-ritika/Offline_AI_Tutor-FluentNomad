@@ -19,8 +19,6 @@ class SaveUserDataLocallyDataSourceImpl
   Future<void> saveLanguage(UserDataModel userData) async {
     try {
       await userPrefBox.put(HiveKeys.userDataKey, userData);
-
-      final UserDataModel? data = userPrefBox.get(HiveKeys.userDataKey);
     } catch (e) {
       throw HiveDataException(message: "Something went wrong");
     }

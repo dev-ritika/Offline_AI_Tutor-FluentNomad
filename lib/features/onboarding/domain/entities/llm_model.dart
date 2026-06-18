@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:offline_ai_tutor/features/onboarding/presentation/utils/enums/model_install_status_enum.dart';
 
 class LLMModelEntity extends Equatable {
   final List<Models> models;
