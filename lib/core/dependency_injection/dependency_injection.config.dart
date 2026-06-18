@@ -156,6 +156,9 @@ extension GetItInjectableX on _i174.GetIt {
         installStatusBox: gh<_i170.Box<List<dynamic>>>(
           instanceName: 'modelsInstall',
         ),
+        userPrefBox: gh<_i170.Box<_i702.UserDataModel>>(
+          instanceName: 'userPrefs',
+        ),
       ),
     );
     gh.lazySingleton<_i550.InstallModelRepository>(

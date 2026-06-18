@@ -10,7 +10,7 @@ class GetModelInstallStatus {
 
   const GetModelInstallStatus({required this.getModelInstallStatusRepository});
 
-  Either<Failures, List<ModelInstallData>> call() {
+  Either<Failures, ({List<ModelInstallData> modelData, bool userData})> call() {
     return getModelInstallStatusRepository.getModelInstallStatus();
   }
 }

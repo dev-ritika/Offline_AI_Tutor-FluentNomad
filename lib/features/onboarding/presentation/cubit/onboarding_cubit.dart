@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:dartz/dartz.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:offline_ai_tutor/core/error_handling/failures.dart';
@@ -208,6 +209,8 @@ class OnboardingCubit extends Cubit<OnboardingState> {
             }
           }
 
+          print("checkinggg $modelInstallData");
+
           emit(state.copyWith(modelInstallData: modelInstallData));
         }
       },
@@ -319,9 +322,9 @@ class OnboardingCubit extends Cubit<OnboardingState> {
     emit(state.copyWith(installedAllModels: true));
   }
 
-  bool updateInstallStatus() {
-    final Either<Failures, List<ModelInstallData>> data = getModelInstallStatus
-        .call();
+  bool updateOnboardingStatus() {
+    final Either<Failures, ({List<ModelInstallData> modelData, bool userData})>
+    data = getModelInstallStatus.call();
 
     return data.fold(
       (l) {
@@ -329,30 +332,41 @@ class OnboardingCubit extends Cubit<OnboardingState> {
         return false;
       },
       (r) {
-        if (r.isEmpty) {
+        if (r.modelData.isEmpty) {
           return false;
         }
 
         Map<String, dynamic> installationStatus = {};
 
-        late bool allModelsInstalled = true;
+        late bool onboardingCompleted = true;
 
-        for (var x in r) {
+        for (var x in r.modelData) {
           installationStatus[x.id] = x.installedPercentage;
         }
 
+        print("installationStatus $installationStatus");
+
         installationStatus.forEach((key, value) {
           if (value < 100) {
-            allModelsInstalled = false;
+            onboardingCompleted = false;
           }
         });
 
-        emit(state.copyWith(modelInstallData: r, installedAllModels: false));
+        if (!r.userData) {
+          onboardingCompleted = false;
+        }
 
-        return allModelsInstalled;
+        debugPrint("checkinggg 0 ${r.modelData}");
+
+        emit(
+          state.copyWith(
+            modelInstallData: r.modelData,
+            installedAllModels: false,
+          ),
+        );
+
+        return onboardingCompleted;
       },
     );
   }
 }
-//en_US-lessac-medium.onnx
-// on restart - if all downloaded redirect to home

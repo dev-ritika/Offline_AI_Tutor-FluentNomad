@@ -33,11 +33,11 @@ class _SplashScreenState extends State<SplashScreen> {
     _timer = Timer(const Duration(seconds: 2), () {
       if (!mounted) return;
       WidgetsBinding.instance.addPostFrameCallback((x) {
-        final bool installedAllModels = context
+        final bool onboardingCompleted = context
             .read<OnboardingCubit>()
-            .updateInstallStatus();
+            .updateOnboardingStatus();
 
-        if (installedAllModels) {
+        if (onboardingCompleted) {
           Navigator.of(context).pushNamed(RoutesNames.homeScreen);
         } else {
           Navigator.of(context).pushReplacementNamed(

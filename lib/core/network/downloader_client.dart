@@ -47,8 +47,6 @@ class DownloaderClient {
         final TaskStatusUpdate status = await data;
 
         if (status.status == TaskStatus.complete) {
-          yield left(NetworkException(message: 'Download error - $e'));
-
           return;
         }
 

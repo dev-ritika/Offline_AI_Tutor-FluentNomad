@@ -14,15 +14,18 @@ class GetModelInstallStatusRepoImpl implements GetModelInstallStatusRepository {
   GetModelInstallStatusRepoImpl({required this.getModelInstallStatusSource});
 
   @override
-  Either<Failures, List<ModelInstallData>> getModelInstallStatus() {
+  Either<Failures, ({List<ModelInstallData> modelData, bool userData})>
+  getModelInstallStatus() {
     try {
-      Either<Exception, List<LlmModelInstall>> data =
-          getModelInstallStatusSource.getModelInstallStatus();
+      Either<Exception, ({List<LlmModelInstall> modelData, bool userData})>
+      data = getModelInstallStatusSource.getModelInstallStatus();
 
       return data.fold((l) => left(NetworkFailure(l.toString())), (r) {
-        final List<ModelInstallData> data = r.map((e) => e.toDomain()).toList();
+        final List<ModelInstallData> data = r.modelData
+            .map((e) => e.toDomain())
+            .toList();
 
-        return right(data);
+        return right((modelData: data, userData: r.userData));
       });
     } on NetworkException catch (e) {
       return left(NetworkFailure(e.message));
