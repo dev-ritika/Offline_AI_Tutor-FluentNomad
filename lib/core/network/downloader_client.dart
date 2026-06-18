@@ -51,13 +51,17 @@ class DownloaderClient {
         }
 
         if (!_isRetryable(status)) {
-          yield left(NetworkException(message: 'Download error - $e'));
+          yield left(
+            NetworkException(message: 'Download error ${status.status}'),
+          );
 
           return;
         }
 
         if (attempts == maxRetries) {
-          yield left(NetworkException(message: 'Download error - $e'));
+          yield left(
+            NetworkException(message: 'Download error - ${status.status}'),
+          );
 
           return;
         }
@@ -90,8 +94,7 @@ class DownloaderClient {
         if (code != null && code >= 400 && code < 500 && code != 429) {
           return false; // 4xx auth/bad-request — permanent
         }
-        // package already retried transport; treat exhausted transport as terminal
-        return false;
+        return true;
       default:
         return false;
     }

@@ -223,16 +223,22 @@ class OnboardingCubit extends Cubit<OnboardingState> {
       state.modelInstallData!,
     );
 
+    print("downloadableModelsdownloadableModels $downloadableModels");
+
     // total bytes per model id  (Whisper = 1 file, tts = sum of all voice files)
     final Map<String, int> totalBytes = {};
     for (final m in downloadableModels) {
       totalBytes[m.id] = (totalBytes[m.id] ?? 0) + m.sizeInBytes;
     }
 
+    print("totalBytestotalBytes $totalBytes");
+
     // received bytes per model id (grows as files finish)
     final Map<String, int> receivedBytes = {
       for (final id in totalBytes.keys) id: 0,
     };
+
+    print("receivedBytesreceivedBytes $receivedBytes");
 
     // UI list = one card per id (what the screen shows)
     final List<ModelInstallData> uiModels = [];
@@ -251,12 +257,10 @@ class OnboardingCubit extends Cubit<OnboardingState> {
 
     int index = 0;
     int localIndex = 0;
-
+    bool isError = false;
     // download each file
     for (final model in downloadableModels) {
       if (model.installedStatus != ModelInstallStatusEnum.Downloaded) {
-        bool isError = false;
-
         await for (final result in installModel.call(model.url)) {
           result.fold(
             (l) {
@@ -313,13 +317,13 @@ class OnboardingCubit extends Cubit<OnboardingState> {
 
         data.fold(
           (l) => emit(state.copyWith(status: StateStatusEnum.error, error: l)),
-          (r) => emit(
-            state.copyWith(status: StateStatusEnum.saved, clearError: true),
-          ),
+          (r) => emit(state.copyWith(clearError: true)),
         );
       }
     }
-    emit(state.copyWith(installedAllModels: true));
+    if (!isError) {
+      emit(state.copyWith(installedAllModels: true));
+    }
   }
 
   bool updateOnboardingStatus() {
@@ -340,6 +344,8 @@ class OnboardingCubit extends Cubit<OnboardingState> {
 
         late bool onboardingCompleted = true;
 
+        late bool modelsInstalled = false;
+
         for (var x in r.modelData) {
           installationStatus[x.id] = x.installedPercentage;
         }
@@ -349,6 +355,9 @@ class OnboardingCubit extends Cubit<OnboardingState> {
         installationStatus.forEach((key, value) {
           if (value < 100) {
             onboardingCompleted = false;
+            modelsInstalled = false;
+          } else {
+            modelsInstalled = true;
           }
         });
 
@@ -356,11 +365,26 @@ class OnboardingCubit extends Cubit<OnboardingState> {
           onboardingCompleted = false;
         }
 
-        debugPrint("checkinggg 0 ${r.modelData}");
+        List<ModelInstallData>? finalModelList;
+
+        if (modelsInstalled) {
+          finalModelList = r.modelData
+              .map(
+                (x) => x.copyWith(
+                  installedPercentage: 100,
+                  installedStatus: ModelInstallStatusEnum.Downloaded,
+                ),
+              )
+              .toList();
+
+          print("finalModelList $finalModelList");
+        }
+
+        print("checcccc ${finalModelList ?? r.modelData}");
 
         emit(
           state.copyWith(
-            modelInstallData: r.modelData,
+            modelInstallData: finalModelList ?? r.modelData,
             installedAllModels: false,
           ),
         );

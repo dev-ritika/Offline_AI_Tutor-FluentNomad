@@ -38,7 +38,7 @@ class _SplashScreenState extends State<SplashScreen> {
             .updateOnboardingStatus();
 
         if (onboardingCompleted) {
-          Navigator.of(context).pushNamed(RoutesNames.homeScreen);
+          Navigator.of(context).pushReplacementNamed(RoutesNames.homeScreen);
         } else {
           Navigator.of(context).pushReplacementNamed(
             RoutesNames.onboardingScreen,
