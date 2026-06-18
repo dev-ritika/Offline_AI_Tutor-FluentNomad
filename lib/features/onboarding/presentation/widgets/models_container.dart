@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:offline_ai_tutor/core/common_widgets/selectable_container.dart';
 import 'package:offline_ai_tutor/core/utils/helpers/sizebytes_converter.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/entities/llm_model.dart';
+import 'package:offline_ai_tutor/features/onboarding/domain/entities/model_install_enum.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/cubit/onboarding_cubit.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/cubit/onboarding_state.dart';
 import 'package:offline_ai_tutor/core/utils/helpers/container_color_model.dart';
@@ -53,7 +54,7 @@ class ModelsContainer extends StatelessWidget {
               ),
               containerColorModel: ContainerColorModel.installationStatusColor(
                 modelInstallData == null
-                    ? ModelInstallStatusEnum.Queued
+                    ? ModelInstallStatus.Queued
                     : modelInstallData[index].installedStatus,
 
                 // ModelInstallStatusEnum.Downloading,
@@ -69,19 +70,19 @@ class ModelsContainer extends StatelessWidget {
 Color? getProgressColor(List<ModelInstallData>? modelInstallData, int index) {
   final Color? color = ContainerColorModel.installationStatusColor(
     modelInstallData == null
-        ? ModelInstallStatusEnum.Queued
+        ? ModelInstallStatus.Queued
         : modelInstallData[index].installedStatus,
   ).progressColor;
   return color;
 }
 
-Widget getIcon(ModelInstallStatusEnum? status) {
+Widget getIcon(ModelInstallStatus? status) {
   switch (status) {
-    case (ModelInstallStatusEnum.Queued):
+    case (ModelInstallStatus.Queued):
       return const Icon(Icons.query_builder_sharp);
-    case (ModelInstallStatusEnum.Downloading):
+    case (ModelInstallStatus.Downloading):
       return const Icon(Icons.downloading_rounded);
-    case (ModelInstallStatusEnum.Downloaded):
+    case (ModelInstallStatus.Downloaded):
       return const Icon(Icons.file_download_done_rounded);
     default:
       return const Icon(Icons.query_builder_sharp);
@@ -89,10 +90,10 @@ Widget getIcon(ModelInstallStatusEnum? status) {
 }
 
 String installationStatus(ModelInstallData data) {
-  if (data.installedStatus == ModelInstallStatusEnum.Queued) {
-    return ModelInstallStatusEnum.Queued.name;
-  } else if (data.installedStatus == ModelInstallStatusEnum.Downloaded) {
-    return ModelInstallStatusEnum.Downloaded.name;
+  if (data.installedStatus == ModelInstallStatus.Queued) {
+    return ModelInstallStatus.Queued.name;
+  } else if (data.installedStatus == ModelInstallStatus.Downloaded) {
+    return ModelInstallStatus.Downloaded.name;
   } else {
     return "${data.installedPercentage} %";
   }

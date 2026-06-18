@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:offline_ai_tutor/core/utils/constants/color_consts.dart';
+import 'package:offline_ai_tutor/features/onboarding/domain/entities/model_install_enum.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/utils/enums/model_install_status_enum.dart';
 
 class ContainerColorModel {
@@ -26,14 +27,14 @@ class ContainerColorModel {
   });
 
   static ContainerColorModel installationStatusColor(
-    ModelInstallStatusEnum status,
+    ModelInstallStatus status,
   ) {
     switch (status) {
-      case (ModelInstallStatusEnum.Queued):
+      case (ModelInstallStatus.Queued):
         return yetToStartColorModel;
-      case (ModelInstallStatusEnum.Downloading):
+      case (ModelInstallStatus.Downloading):
         return wipColorModel;
-      case (ModelInstallStatusEnum.Downloaded):
+      case (ModelInstallStatus.Downloaded):
         return successColorModel;
     }
   }

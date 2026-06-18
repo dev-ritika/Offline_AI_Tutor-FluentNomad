@@ -7,14 +7,14 @@ import 'package:offline_ai_tutor/features/onboarding/data/data_model/language_mo
 import 'package:offline_ai_tutor/features/onboarding/data/data_model/level_data_model.dart';
 import 'package:offline_ai_tutor/features/onboarding/data/data_model/llm_model_install.dart';
 import 'package:offline_ai_tutor/features/onboarding/data/data_model/user_data_model.dart';
-import 'package:offline_ai_tutor/features/onboarding/presentation/utils/enums/model_install_status_enum.dart';
+import 'package:offline_ai_tutor/features/onboarding/domain/entities/model_install_enum.dart';
 
 extension HiveRegistrar on HiveInterface {
   void registerAdapters() {
     registerAdapter(LanguageModelAdapter());
     registerAdapter(LevelDataModelAdapter());
     registerAdapter(LlmModelInstallAdapter());
-    registerAdapter(ModelInstallStatusEnumAdapter());
+    registerAdapter(ModelInstallStatusAdapter());
     registerAdapter(UserDataModelAdapter());
   }
 }
@@ -24,7 +24,7 @@ extension IsolatedHiveRegistrar on IsolatedHiveInterface {
     registerAdapter(LanguageModelAdapter());
     registerAdapter(LevelDataModelAdapter());
     registerAdapter(LlmModelInstallAdapter());
-    registerAdapter(ModelInstallStatusEnumAdapter());
+    registerAdapter(ModelInstallStatusAdapter());
     registerAdapter(UserDataModelAdapter());
   }
 }

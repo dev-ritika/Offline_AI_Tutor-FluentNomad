@@ -25,16 +25,11 @@ class SaveModelsInstallStatusSourceImpl
     List<LlmModelInstall> installData,
   ) async {
     try {
-      List x = <LlmModelInstall>[];
-
-      for (var model in installData) {
-        x.add(model);
-      }
-      await installStatusBox.put(HiveKeys.modelInstallStatus, x);
+      await installStatusBox.put(HiveKeys.modelInstallStatus, installData);
 
       return right(true);
     } catch (e) {
-      return left(NetworkException(message: "Exception"));
+      return left(HiveDataException(message: "Exception"));
     }
   }
 }

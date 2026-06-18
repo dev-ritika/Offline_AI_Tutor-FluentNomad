@@ -28,10 +28,10 @@ class SaveModelInstallStatusRepositoryImpl
       await saveModelsInstallStatusSource.saveModelsInstallStatus(modelData);
 
       return right(true);
-    } on NetworkException catch (e) {
-      return left(NetworkFailure("Netowork failue ${e.message}"));
+    } on HiveDataException catch (e) {
+      return left(CacheFailure("Netowork failue ${e.message}"));
     } catch (e) {
-      return left(NetworkFailure("Netowork failue ${e.toString()}"));
+      return left(CacheFailure("Netowork failue ${e.toString()}"));
     }
   }
 }

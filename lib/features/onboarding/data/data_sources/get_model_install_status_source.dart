@@ -46,7 +46,7 @@ class GetModelInstallStatusSourceImpl implements GetModelInstallStatusSource {
 
       return right((modelData: data, userData: userDataAdded));
     } catch (e) {
-      return left(NetworkException(message: "Exception"));
+      return left(HiveDataException(message: "Exception"));
     }
   }
 }

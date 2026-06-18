@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:offline_ai_tutor/features/onboarding/domain/entities/model_install_enum.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/utils/enums/model_install_status_enum.dart';
 
 class ModelInstallData extends Equatable {
@@ -7,7 +8,7 @@ class ModelInstallData extends Equatable {
   final String name;
   final int installedPercentage;
   final String url;
-  final ModelInstallStatusEnum installedStatus;
+  final ModelInstallStatus installedStatus;
 
   const ModelInstallData({
     required this.id,
@@ -23,7 +24,7 @@ class ModelInstallData extends Equatable {
       id: "",
       sizeInBytes: 0,
       installedPercentage: 0,
-      installedStatus: ModelInstallStatusEnum.Queued,
+      installedStatus: ModelInstallStatus.Queued,
       name: "",
       url: "",
     );
@@ -35,7 +36,7 @@ class ModelInstallData extends Equatable {
     String? name,
     String? url,
     int? installedPercentage,
-    ModelInstallStatusEnum? installedStatus,
+    ModelInstallStatus? installedStatus,
   }) {
     return ModelInstallData(
       id: id ?? this.id,

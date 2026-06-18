@@ -27,10 +27,10 @@ class GetModelInstallStatusRepoImpl implements GetModelInstallStatusRepository {
 
         return right((modelData: data, userData: r.userData));
       });
-    } on NetworkException catch (e) {
-      return left(NetworkFailure(e.message));
+    } on HiveDataException catch (e) {
+      return left(CacheFailure(e.message));
     } catch (e) {
-      return left(NetworkFailure(e.toString()));
+      return left(CacheFailure(e.toString()));
     }
   }
 }

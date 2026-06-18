@@ -1,38 +1,37 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'model_install_status_enum.dart';
+part of 'model_install_enum.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class ModelInstallStatusEnumAdapter
-    extends TypeAdapter<ModelInstallStatusEnum> {
+class ModelInstallStatusAdapter extends TypeAdapter<ModelInstallStatus> {
   @override
   final typeId = 4;
 
   @override
-  ModelInstallStatusEnum read(BinaryReader reader) {
+  ModelInstallStatus read(BinaryReader reader) {
     switch (reader.readByte()) {
       case 0:
-        return ModelInstallStatusEnum.Queued;
+        return ModelInstallStatus.Queued;
       case 1:
-        return ModelInstallStatusEnum.Downloading;
+        return ModelInstallStatus.Downloading;
       case 2:
-        return ModelInstallStatusEnum.Downloaded;
+        return ModelInstallStatus.Downloaded;
       default:
-        return ModelInstallStatusEnum.Queued;
+        return ModelInstallStatus.Queued;
     }
   }
 
   @override
-  void write(BinaryWriter writer, ModelInstallStatusEnum obj) {
+  void write(BinaryWriter writer, ModelInstallStatus obj) {
     switch (obj) {
-      case ModelInstallStatusEnum.Queued:
+      case ModelInstallStatus.Queued:
         writer.writeByte(0);
-      case ModelInstallStatusEnum.Downloading:
+      case ModelInstallStatus.Downloading:
         writer.writeByte(1);
-      case ModelInstallStatusEnum.Downloaded:
+      case ModelInstallStatus.Downloaded:
         writer.writeByte(2);
     }
   }
@@ -43,7 +42,7 @@ class ModelInstallStatusEnumAdapter
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is ModelInstallStatusEnumAdapter &&
+      other is ModelInstallStatusAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

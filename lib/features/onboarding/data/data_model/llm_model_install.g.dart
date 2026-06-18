@@ -22,7 +22,7 @@ class LlmModelInstallAdapter extends TypeAdapter<LlmModelInstall> {
       name: fields[2] as String,
       url: fields[4] as String,
       installedPercentage: (fields[3] as num).toInt(),
-      installedStatus: fields[5] as ModelInstallStatusEnum,
+      installedStatus: fields[5] as ModelInstallStatus,
     );
   }
 

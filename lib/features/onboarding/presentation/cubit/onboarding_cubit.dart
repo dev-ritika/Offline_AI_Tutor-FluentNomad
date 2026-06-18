@@ -7,6 +7,7 @@ import 'package:offline_ai_tutor/core/error_handling/failures.dart';
 import 'package:offline_ai_tutor/core/utils/enums/state_enum.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/entities/language.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/entities/level.dart';
+import 'package:offline_ai_tutor/features/onboarding/domain/entities/model_install_enum.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/entities/user_data.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/get_languages.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/get_levels.dart';
@@ -177,7 +178,7 @@ class OnboardingCubit extends Cubit<OnboardingState> {
                   ModelInstallData(
                     id: x.id,
                     installedPercentage: 0,
-                    installedStatus: ModelInstallStatusEnum.Queued,
+                    installedStatus: ModelInstallStatus.Queued,
                     sizeInBytes: v.onnxSizeBytes,
                     name: v.displayName,
                     url: v.onnx,
@@ -188,7 +189,7 @@ class OnboardingCubit extends Cubit<OnboardingState> {
                   ModelInstallData(
                     id: x.id,
                     installedPercentage: 0,
-                    installedStatus: ModelInstallStatusEnum.Queued,
+                    installedStatus: ModelInstallStatus.Queued,
                     sizeInBytes: v.configSizeBytes,
                     name: v.displayName,
                     url: v.config,
@@ -202,7 +203,7 @@ class OnboardingCubit extends Cubit<OnboardingState> {
                   installedPercentage: 0,
                   sizeInBytes: x.sizeBytes,
                   url: x.url ?? "",
-                  installedStatus: ModelInstallStatusEnum.Queued,
+                  installedStatus: ModelInstallStatus.Queued,
                   name: x.displayName,
                 ),
               );
@@ -260,7 +261,7 @@ class OnboardingCubit extends Cubit<OnboardingState> {
     bool isError = false;
     // download each file
     for (final model in downloadableModels) {
-      if (model.installedStatus != ModelInstallStatusEnum.Downloaded) {
+      if (model.installedStatus != ModelInstallStatus.Downloaded) {
         await for (final result in installModel.call(model.url)) {
           result.fold(
             (l) {
@@ -284,8 +285,8 @@ class OnboardingCubit extends Cubit<OnboardingState> {
               uiModels[index] = uiModels[index].copyWith(
                 installedPercentage: percent,
                 installedStatus: percent < 100
-                    ? ModelInstallStatusEnum.Downloading
-                    : ModelInstallStatusEnum.Downloaded,
+                    ? ModelInstallStatus.Downloading
+                    : ModelInstallStatus.Downloaded,
               );
 
               emit(state.copyWith(modelInstallData: [...uiModels]));
@@ -306,8 +307,8 @@ class OnboardingCubit extends Cubit<OnboardingState> {
                   ? 100
                   : 0,
               installedStatus: uiModels[index].installedPercentage >= 100
-                  ? ModelInstallStatusEnum.Downloaded
-                  : ModelInstallStatusEnum.Queued,
+                  ? ModelInstallStatus.Downloaded
+                  : ModelInstallStatus.Queued,
               // id: downloadableModels[localIndex].id,
             );
 
@@ -372,7 +373,7 @@ class OnboardingCubit extends Cubit<OnboardingState> {
               .map(
                 (x) => x.copyWith(
                   installedPercentage: 100,
-                  installedStatus: ModelInstallStatusEnum.Downloaded,
+                  installedStatus: ModelInstallStatus.Downloaded,
                 ),
               )
               .toList();
