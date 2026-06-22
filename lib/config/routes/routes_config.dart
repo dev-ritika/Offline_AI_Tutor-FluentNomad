@@ -13,6 +13,10 @@ class RoutesConfig {
           ModalRoute.of(context)?.settings.arguments as OnboardingCubit;
       return OnboardingScreen(onboardingCubit: onboardingCubit);
     },
-    RoutesNames.homeScreen: (_) => const HomeScreen(),
+    RoutesNames.homeScreen: (context) {
+      final OnboardingCubit onboardingCubit =
+          ModalRoute.of(context)?.settings.arguments as OnboardingCubit;
+      return HomeScreen(onboardingCubit: onboardingCubit);
+    },
   };
 }

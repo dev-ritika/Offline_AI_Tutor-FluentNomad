@@ -7,7 +7,10 @@ import 'package:offline_ai_tutor/features/onboarding/data/data_model/llm_model_i
 import 'package:offline_ai_tutor/features/onboarding/data/data_model/user_data_model.dart';
 
 abstract interface class GetModelInstallStatusSource {
-  Either<Exception, ({List<LlmModelInstall> modelData, bool userData})>
+  Either<
+    Exception,
+    ({List<LlmModelInstall> modelData, UserDataModel? userData})
+  >
   getModelInstallStatus();
 }
 
@@ -22,7 +25,10 @@ class GetModelInstallStatusSourceImpl implements GetModelInstallStatusSource {
   });
 
   @override
-  Either<Exception, ({List<LlmModelInstall> modelData, bool userData})>
+  Either<
+    Exception,
+    ({List<LlmModelInstall> modelData, UserDataModel? userData})
+  >
   getModelInstallStatus() {
     try {
       final List<LlmModelInstall> data =
@@ -31,20 +37,13 @@ class GetModelInstallStatusSourceImpl implements GetModelInstallStatusSource {
               ?.cast<LlmModelInstall>() ??
           [];
 
-      bool userDataAdded = false;
       final UserDataModel? userData = userPrefBox.get(HiveKeys.userDataKey);
 
       print("userData $userData");
 
       print("model data $data");
 
-      if (userData == null) {
-        userDataAdded = false;
-      } else {
-        userDataAdded = true;
-      }
-
-      return right((modelData: data, userData: userDataAdded));
+      return right((modelData: data, userData: userData));
     } catch (e) {
       return left(HiveDataException(message: "Exception"));
     }

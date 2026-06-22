@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:dartz/dartz.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:offline_ai_tutor/core/error_handling/failures.dart';
@@ -17,7 +16,6 @@ import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/install_mo
 import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/save_model_install_status.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/save_user_data.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/cubit/onboarding_state.dart';
-import 'package:offline_ai_tutor/features/onboarding/presentation/utils/enums/model_install_status_enum.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/utils/enums/onboarding_header_enum.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/entities/model_install_data.dart';
 
@@ -328,7 +326,10 @@ class OnboardingCubit extends Cubit<OnboardingState> {
   }
 
   bool updateOnboardingStatus() {
-    final Either<Failures, ({List<ModelInstallData> modelData, bool userData})>
+    final Either<
+      Failures,
+      ({List<ModelInstallData> modelData, UserData? userData})
+    >
     data = getModelInstallStatus.call();
 
     return data.fold(
@@ -362,8 +363,10 @@ class OnboardingCubit extends Cubit<OnboardingState> {
           }
         });
 
-        if (!r.userData) {
+        if (r.userData == null) {
           onboardingCompleted = false;
+        } else {
+          emit(state.copyWith(enteredName: r.userData?.userName));
         }
 
         List<ModelInstallData>? finalModelList;

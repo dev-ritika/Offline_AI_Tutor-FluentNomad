@@ -3,8 +3,10 @@ import 'package:injectable/injectable.dart';
 import 'package:offline_ai_tutor/core/error_handling/exceptions.dart';
 import 'package:offline_ai_tutor/core/error_handling/failures.dart';
 import 'package:offline_ai_tutor/features/onboarding/data/data_model/llm_model_install.dart';
+import 'package:offline_ai_tutor/features/onboarding/data/data_model/user_data_model.dart';
 import 'package:offline_ai_tutor/features/onboarding/data/data_sources/get_model_install_status_source.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/entities/model_install_data.dart';
+import 'package:offline_ai_tutor/features/onboarding/domain/entities/user_data.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/repositories/get_model_install_status_repository.dart';
 
 @LazySingleton(as: GetModelInstallStatusRepository)
@@ -14,10 +16,13 @@ class GetModelInstallStatusRepoImpl implements GetModelInstallStatusRepository {
   GetModelInstallStatusRepoImpl({required this.getModelInstallStatusSource});
 
   @override
-  Either<Failures, ({List<ModelInstallData> modelData, bool userData})>
+  Either<Failures, ({List<ModelInstallData> modelData, UserData? userData})>
   getModelInstallStatus() {
     try {
-      Either<Exception, ({List<LlmModelInstall> modelData, bool userData})>
+      Either<
+        Exception,
+        ({List<LlmModelInstall> modelData, UserDataModel? userData})
+      >
       data = getModelInstallStatusSource.getModelInstallStatus();
 
       return data.fold((l) => left(NetworkFailure(l.toString())), (r) {
@@ -25,7 +30,9 @@ class GetModelInstallStatusRepoImpl implements GetModelInstallStatusRepository {
             .map((e) => e.toDomain())
             .toList();
 
-        return right((modelData: data, userData: r.userData));
+        final UserData? userData = r.userData?.toDomain();
+
+        return right((modelData: data, userData: userData));
       });
     } on HiveDataException catch (e) {
       return left(CacheFailure(e.message));
