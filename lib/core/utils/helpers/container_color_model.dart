@@ -78,4 +78,14 @@ class ContainerColorModel {
     titleColor: ColorConsts.textPrimaryColor,
     subTitleColor: ColorConsts.whiteColor35,
   );
+
+  static const ContainerColorModel warningColorModel = ContainerColorModel(
+    borderColor: ColorConsts.warningColor25,
+    gradientColor1: ColorConsts.warningColor12,
+    gradientColor2: ColorConsts.warningColor12,
+    containerColor: ColorConsts.warningColor12,
+    avatarBgColor: Colors.transparent,
+    titleColor: ColorConsts.warningColor,
+    subTitleColor: ColorConsts.warningColor50,
+  );
 }

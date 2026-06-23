@@ -13,6 +13,7 @@ class SelectableContainer extends StatelessWidget {
   final Widget? trailingItem;
   final Widget? bottemItem;
   final VoidCallback? onTap;
+  final bool allowOverflow;
 
   const SelectableContainer({
     super.key,
@@ -20,6 +21,7 @@ class SelectableContainer extends StatelessWidget {
     this.containerColorModel = ContainerColorModel.containerColorModel,
     required this.title,
     required this.subtitle,
+    this.allowOverflow = true,
     this.height,
     this.width,
     this.isSelected = false,
@@ -86,7 +88,9 @@ class SelectableContainer extends StatelessWidget {
                           ),
                           Text(
                             subtitle,
-                            overflow: TextOverflow.ellipsis,
+                            overflow: allowOverflow
+                                ? TextOverflow.ellipsis
+                                : null,
                             textAlign: TextAlign.left,
                             style: Theme.of(context).textTheme.bodySmall
                                 ?.copyWith(

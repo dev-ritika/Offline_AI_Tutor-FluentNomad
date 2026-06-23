@@ -366,7 +366,12 @@ class OnboardingCubit extends Cubit<OnboardingState> {
         if (r.userData == null) {
           onboardingCompleted = false;
         } else {
-          emit(state.copyWith(enteredName: r.userData?.userName));
+          emit(
+            state.copyWith(
+              enteredName: r.userData?.userName,
+              selectedLanguage: r.userData?.selectedLanguage,
+            ),
+          );
         }
 
         List<ModelInstallData>? finalModelList;

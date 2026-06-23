@@ -25,6 +25,10 @@ class ColorConsts {
   static const Color disabledColor8 = Color(0x08D0CEE8);
 
   static const Color warningColor = Color(0xffF5A623);
+  static const Color warningColor12 = Color(0x12F5A623);
+  static const Color warningColor25 = Color(0x25F5A623);
+  static const Color warningColor50 = Color(0x50F5A623);
+
   static const Color errorColor = Color(0xffFF5E5E);
 
   static const Color blackColor = Color(0xff000000);
