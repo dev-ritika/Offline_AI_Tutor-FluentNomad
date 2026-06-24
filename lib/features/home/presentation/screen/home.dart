@@ -1,7 +1,10 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:offline_ai_tutor/core/dependency_injection/dependency_injection.dart';
 import 'package:offline_ai_tutor/core/utils/constants/color_consts.dart';
+import 'package:offline_ai_tutor/features/home/presentation/cubit/home_data_cubit.dart';
+import 'package:offline_ai_tutor/features/home/presentation/cubit/home_data_state.dart';
 import 'package:offline_ai_tutor/features/home/presentation/widgets/actions_grid.dart';
 import 'package:offline_ai_tutor/features/home/presentation/widgets/streak_container.dart';
 import 'package:offline_ai_tutor/features/home/presentation/widgets/user_details_container.dart';
@@ -32,8 +35,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: widget.onboardingCubit,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          lazy: false,
+          create: (_) {
+            return sl<HomeDataCubit>();
+          },
+        ),
+        BlocProvider.value(value: widget.onboardingCubit),
+      ],
       child: Scaffold(
         // floatingActionButton: FloatingActionButton(
         //   onPressed: () {},

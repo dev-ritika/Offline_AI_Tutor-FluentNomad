@@ -6,4 +6,5 @@ class HiveTypeIds {
   static const int levelModelId = 2;
   static const int installModelId = 3;
   static const int installStatusId = 4;
+  static const int homeDataId = 5;
 }

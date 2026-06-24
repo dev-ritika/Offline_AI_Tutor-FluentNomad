@@ -3,6 +3,7 @@
 // Check in to version control
 
 import 'package:hive_ce/hive_ce.dart';
+import 'package:offline_ai_tutor/features/home/data/data_model/home_data_model.dart';
 import 'package:offline_ai_tutor/features/onboarding/data/data_model/language_model.dart';
 import 'package:offline_ai_tutor/features/onboarding/data/data_model/level_data_model.dart';
 import 'package:offline_ai_tutor/features/onboarding/data/data_model/llm_model_install.dart';
@@ -11,6 +12,7 @@ import 'package:offline_ai_tutor/features/onboarding/domain/entities/model_insta
 
 extension HiveRegistrar on HiveInterface {
   void registerAdapters() {
+    registerAdapter(HomeDataModelAdapter());
     registerAdapter(LanguageModelAdapter());
     registerAdapter(LevelDataModelAdapter());
     registerAdapter(LlmModelInstallAdapter());
@@ -21,6 +23,7 @@ extension HiveRegistrar on HiveInterface {
 
 extension IsolatedHiveRegistrar on IsolatedHiveInterface {
   void registerAdapters() {
+    registerAdapter(HomeDataModelAdapter());
     registerAdapter(LanguageModelAdapter());
     registerAdapter(LevelDataModelAdapter());
     registerAdapter(LlmModelInstallAdapter());

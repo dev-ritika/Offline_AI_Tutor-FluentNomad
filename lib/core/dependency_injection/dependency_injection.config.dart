@@ -14,6 +14,7 @@ import 'package:get_it/get_it.dart' as _i174;
 import 'package:hive_ce/hive.dart' as _i738;
 import 'package:hive_ce/hive_ce.dart' as _i1055;
 import 'package:hive_ce_flutter/adapters.dart' as _i170;
+import 'package:hive_ce_flutter/hive_ce_flutter.dart' as _i965;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:offline_ai_tutor/core/dependency_injection/register_module.dart'
     as _i989;
@@ -23,6 +24,18 @@ import 'package:offline_ai_tutor/core/storage/hive/hive_boxes_module.dart'
     as _i998;
 import 'package:offline_ai_tutor/core/storage/hive/hive_initializer.dart'
     as _i314;
+import 'package:offline_ai_tutor/features/home/data/data_model/home_data_model.dart'
+    as _i1057;
+import 'package:offline_ai_tutor/features/home/data/data_source/save_home_data_source.dart'
+    as _i52;
+import 'package:offline_ai_tutor/features/home/data/repositories/save_home_data_repo_impl.dart'
+    as _i938;
+import 'package:offline_ai_tutor/features/home/domain/repositories/save_home_data_repository.dart'
+    as _i231;
+import 'package:offline_ai_tutor/features/home/domain/use_cases/save_home_data.dart'
+    as _i135;
+import 'package:offline_ai_tutor/features/home/presentation/cubit/home_data_cubit.dart'
+    as _i701;
 import 'package:offline_ai_tutor/features/onboarding/data/data_model/user_data_model.dart'
     as _i702;
 import 'package:offline_ai_tutor/features/onboarding/data/data_sources/get_model_install_status_source.dart'
@@ -107,6 +120,10 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i510.LevelLocalDataSource>(
       () => const _i510.LevelLocalDataSourceImpl(),
     );
+    gh.lazySingleton<_i738.Box<_i1057.HomeDataModel>>(
+      () => hiveBoxesModule.homeDataBox,
+      instanceName: 'homeData',
+    );
     gh.lazySingleton<_i738.Box<_i702.UserDataModel>>(
       () => hiveBoxesModule.getUserPrefBox,
       instanceName: 'userPrefs',
@@ -161,9 +178,26 @@ extension GetItInjectableX on _i174.GetIt {
         ),
       ),
     );
+    gh.lazySingleton<_i52.SaveHomeDataSource>(
+      () => _i52.SaveHomeDataSourceImpl(
+        homeDataBox: gh<_i965.Box<_i1057.HomeDataModel>>(
+          instanceName: 'homeData',
+        ),
+      ),
+    );
+    gh.lazySingleton<_i231.SaveHomeDataRepository>(
+      () => _i938.SaveHomeDataRepoImpl(
+        saveHomeDataSource: gh<_i52.SaveHomeDataSource>(),
+      ),
+    );
     gh.lazySingleton<_i550.InstallModelRepository>(
       () => _i325.InstallModelRepoImpl(
         installModelDataSource: gh<_i627.InstallModelDataSource>(),
+      ),
+    );
+    gh.lazySingleton<_i135.SaveHomeData>(
+      () => _i135.SaveHomeData(
+        saveHomeDataRepository: gh<_i231.SaveHomeDataRepository>(),
       ),
     );
     gh.lazySingleton<_i333.LlmModelRepository>(
@@ -189,6 +223,9 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i862.GetModelInstallStatusRepoImpl(
         getModelInstallStatusSource: gh<_i1028.GetModelInstallStatusSource>(),
       ),
+    );
+    gh.factory<_i701.HomeDataCubit>(
+      () => _i701.HomeDataCubit(saveData: gh<_i135.SaveHomeData>()),
     );
     gh.lazySingleton<_i925.GetLanguages>(
       () => _i925.GetLanguages(
