@@ -6,6 +6,7 @@ import 'package:offline_ai_tutor/core/utils/constants/color_consts.dart';
 import 'package:offline_ai_tutor/features/home/presentation/cubit/home_data_cubit.dart';
 import 'package:offline_ai_tutor/features/home/presentation/cubit/home_data_state.dart';
 import 'package:offline_ai_tutor/features/home/presentation/widgets/actions_grid.dart';
+import 'package:offline_ai_tutor/features/home/presentation/widgets/goal_container.dart';
 import 'package:offline_ai_tutor/features/home/presentation/widgets/streak_container.dart';
 import 'package:offline_ai_tutor/features/home/presentation/widgets/user_details_container.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/cubit/onboarding_cubit.dart';
@@ -88,9 +89,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(height: 20),
                 StreakContainer(),
                 SizedBox(height: 20),
-                Text("QUICK START"),
-                SizedBox(height: 20),
+                Text("QUICK START ✌️"),
+                SizedBox(height: 10),
                 ActionsGrid(),
+                SizedBox(height: 20),
+                Text("MAINTAIN YOUR STREAK ⏱️"),
+                SizedBox(height: 10),
+                GoalContainer(),
               ],
             ),
           ),

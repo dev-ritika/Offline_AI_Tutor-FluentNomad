@@ -54,7 +54,6 @@ class PrimaryButton extends StatelessWidget {
                           children: [
                             TextSpan(
                               text: buttonText,
-
                               style: Theme.of(context).textTheme.titleSmall,
                             ),
                             const WidgetSpan(

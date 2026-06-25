@@ -7,26 +7,25 @@ class ActionsGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: GridView.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          mainAxisSpacing: 20,
-          crossAxisSpacing: 20,
-          mainAxisExtent: 117,
-        ),
-        itemCount: UserActions.userActionsList.length,
-
-        itemBuilder: (context, index) {
-          final data = UserActions.userActionsList[index];
-          return InfoContainer(
-            subtitle: data.subTitle,
-            title: data.title,
-            topIcon: Image.asset(data.imageUrl, height: 40, width: 40),
-            onTap: () {},
-          );
-        },
+    return GridView.builder(
+      shrinkWrap: true,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        mainAxisSpacing: 20,
+        crossAxisSpacing: 20,
+        mainAxisExtent: 117,
       ),
+      itemCount: UserActions.userActionsList.length,
+
+      itemBuilder: (context, index) {
+        final data = UserActions.userActionsList[index];
+        return InfoContainer(
+          subtitle: data.subTitle,
+          title: data.title,
+          topIcon: Image.asset(data.imageUrl, height: 40, width: 40),
+          onTap: () {},
+        );
+      },
     );
   }
 }
