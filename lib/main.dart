@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:offline_ai_tutor/config/routes/routes_config.dart';
 import 'package:offline_ai_tutor/config/theme/theme_config.dart';
 import 'package:offline_ai_tutor/core/dependency_injection/dependency_injection.dart';
 import 'package:offline_ai_tutor/core/storage/hive/hive_initializer.dart';
 import 'package:offline_ai_tutor/features/splash/presentation/screen/splash.dart';
+import 'package:offline_ai_tutor/features/user/presentation/cubit/user_data_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,7 +14,18 @@ void main() async {
 
   await sl<HiveInitializer>().init();
 
-  runApp(const MyApp());
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          lazy: false,
+          create: (context) => sl<UserDataCubit>()..getUserLocalData(),
+        ),
+      ],
+
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

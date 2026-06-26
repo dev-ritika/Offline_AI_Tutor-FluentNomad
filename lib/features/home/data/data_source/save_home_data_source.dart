@@ -16,7 +16,5 @@ class SaveHomeDataSourceImpl extends SaveHomeDataSource {
   @override
   Future<void> saveHomeData(HomeDataModel homeData) async {
     await homeDataBox.put(HiveKeys.homeData, homeData);
-
-    print("dataaa ${homeDataBox.get(HiveKeys.homeData)?.streakDays}");
   }
 }

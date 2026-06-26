@@ -7,7 +7,7 @@ import 'package:offline_ai_tutor/core/utils/enums/state_enum.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/entities/language.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/entities/level.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/entities/model_install_enum.dart';
-import 'package:offline_ai_tutor/features/onboarding/domain/entities/user_data.dart';
+import 'package:offline_ai_tutor/features/user/domain/entities/user_data.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/get_languages.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/get_levels.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/get_model_install_status.dart';
@@ -18,6 +18,7 @@ import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/save_user_
 import 'package:offline_ai_tutor/features/onboarding/presentation/cubit/onboarding_state.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/utils/enums/onboarding_header_enum.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/entities/model_install_data.dart';
+import 'package:offline_ai_tutor/features/user/domain/use_cases/get_user_data.dart';
 
 @injectable
 class OnboardingCubit extends Cubit<OnboardingState> {
@@ -28,6 +29,7 @@ class OnboardingCubit extends Cubit<OnboardingState> {
   final InstallModel installModel;
   final SaveModelInstallStatus saveModelInstallStatus;
   final GetModelInstallStatus getModelInstallStatus;
+  final GetUserData getUserData;
 
   OnboardingCubit({
     required this.saveUserData,
@@ -37,6 +39,7 @@ class OnboardingCubit extends Cubit<OnboardingState> {
     required this.installModel,
     required this.saveModelInstallStatus,
     required this.getModelInstallStatus,
+    required this.getUserData,
   }) : super(const OnboardingState()) {
     loadLanguages();
   }
@@ -208,9 +211,29 @@ class OnboardingCubit extends Cubit<OnboardingState> {
             }
           }
 
-          print("checkinggg $modelInstallData");
-
           emit(state.copyWith(modelInstallData: modelInstallData));
+        }
+      },
+    );
+  }
+
+  void getUserSavedData() {
+    final Either<Failures, UserData?> data = getUserData();
+
+    data.fold(
+      (l) {
+        emit(state.copyWith(error: l, status: StateStatusEnum.error));
+      },
+      (r) {
+        print("userr dataa $r");
+        if (r != null) {
+          emit(
+            state.copyWith(
+              enteredName: r.userName,
+              selectedLanguage: r.selectedLanguage,
+              selectedLevel: r.selectedLevel,
+            ),
+          );
         }
       },
     );
@@ -222,22 +245,16 @@ class OnboardingCubit extends Cubit<OnboardingState> {
       state.modelInstallData!,
     );
 
-    print("downloadableModelsdownloadableModels $downloadableModels");
-
     // total bytes per model id  (Whisper = 1 file, tts = sum of all voice files)
     final Map<String, int> totalBytes = {};
     for (final m in downloadableModels) {
       totalBytes[m.id] = (totalBytes[m.id] ?? 0) + m.sizeInBytes;
     }
 
-    print("totalBytestotalBytes $totalBytes");
-
     // received bytes per model id (grows as files finish)
     final Map<String, int> receivedBytes = {
       for (final id in totalBytes.keys) id: 0,
     };
-
-    print("receivedBytesreceivedBytes $receivedBytes");
 
     // UI list = one card per id (what the screen shows)
     final List<ModelInstallData> uiModels = [];
@@ -352,8 +369,6 @@ class OnboardingCubit extends Cubit<OnboardingState> {
           installationStatus[x.id] = x.installedPercentage;
         }
 
-        print("installationStatus $installationStatus");
-
         installationStatus.forEach((key, value) {
           if (value < 100) {
             onboardingCompleted = false;
@@ -363,15 +378,21 @@ class OnboardingCubit extends Cubit<OnboardingState> {
           }
         });
 
-        if (r.userData == null) {
+        //TODO
+
+        // if (r.userData == null) {
+        //   onboardingCompleted = false;
+        // } else {
+        //   emit(
+        //     state.copyWith(
+        //       enteredName: r.userData?.userName,
+        //       selectedLanguage: r.userData?.selectedLanguage,
+        //     ),
+        //   );
+        // }
+
+        if (state.enteredName == null) {
           onboardingCompleted = false;
-        } else {
-          emit(
-            state.copyWith(
-              enteredName: r.userData?.userName,
-              selectedLanguage: r.userData?.selectedLanguage,
-            ),
-          );
         }
 
         List<ModelInstallData>? finalModelList;
@@ -385,11 +406,7 @@ class OnboardingCubit extends Cubit<OnboardingState> {
                 ),
               )
               .toList();
-
-          print("finalModelList $finalModelList");
         }
-
-        print("checcccc ${finalModelList ?? r.modelData}");
 
         emit(
           state.copyWith(

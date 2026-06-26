@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:offline_ai_tutor/core/common_widgets/selectable_container.dart';
 import 'package:offline_ai_tutor/core/utils/constants/color_consts.dart';
+import 'package:offline_ai_tutor/core/utils/constants/global_consts.dart';
 import 'package:offline_ai_tutor/core/utils/helpers/container_color_model.dart';
 import 'package:offline_ai_tutor/features/home/presentation/cubit/home_data_cubit.dart';
 import 'package:offline_ai_tutor/features/home/presentation/cubit/home_data_state.dart';
+import 'package:offline_ai_tutor/features/home/presentation/utils/home_formatters.dart';
 
 class GoalContainer extends StatelessWidget {
   const GoalContainer({super.key});
@@ -16,18 +18,20 @@ class GoalContainer extends StatelessWidget {
         return state.elapsedTime;
       },
       builder: (context, data) {
+        final progress = HomeFormatters.calculateProgress(data);
+
         return SelectableContainer(
           title: "Today's goal",
-          subtitle: "$data / 30 mins today",
+          subtitle: "$data / ${GlobalConsts.kDailyGoalMinutes} mins today",
           trailingItem: Text(
-            ('${(calculateProgress(data) * 100).round().toString()}%'),
+            ('${(progress * 100).round().toString()}%'),
             style: TextTheme.of(
               context,
-            ).copyWith().bodyMedium?.copyWith(color: ColorConsts.successColor),
+            ).bodyMedium?.copyWith(color: ColorConsts.successColor),
           ),
 
           bottemItem: LinearProgressIndicator(
-            value: calculateProgress(data),
+            value: progress,
             backgroundColor:
                 ContainerColorModel.successColorModel.progressBgColor,
             color: ContainerColorModel.successColorModel.progressColor,
@@ -38,12 +42,4 @@ class GoalContainer extends StatelessWidget {
       },
     );
   }
-}
-
-double calculateProgress(int elapsedTime) {
-  double progress = 0;
-
-  progress = (elapsedTime / 30);
-
-  return progress;
 }

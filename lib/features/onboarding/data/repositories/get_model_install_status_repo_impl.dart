@@ -3,10 +3,10 @@ import 'package:injectable/injectable.dart';
 import 'package:offline_ai_tutor/core/error_handling/exceptions.dart';
 import 'package:offline_ai_tutor/core/error_handling/failures.dart';
 import 'package:offline_ai_tutor/features/onboarding/data/data_model/llm_model_install.dart';
-import 'package:offline_ai_tutor/features/onboarding/data/data_model/user_data_model.dart';
+import 'package:offline_ai_tutor/features/user/data/data_model/user_data_model.dart';
 import 'package:offline_ai_tutor/features/onboarding/data/data_sources/get_model_install_status_source.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/entities/model_install_data.dart';
-import 'package:offline_ai_tutor/features/onboarding/domain/entities/user_data.dart';
+import 'package:offline_ai_tutor/features/user/domain/entities/user_data.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/repositories/get_model_install_status_repository.dart';
 
 @LazySingleton(as: GetModelInstallStatusRepository)

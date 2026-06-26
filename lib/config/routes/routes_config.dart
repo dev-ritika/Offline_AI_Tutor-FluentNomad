@@ -14,9 +14,7 @@ class RoutesConfig {
       return OnboardingScreen(onboardingCubit: onboardingCubit);
     },
     RoutesNames.homeScreen: (context) {
-      final OnboardingCubit onboardingCubit =
-          ModalRoute.of(context)?.settings.arguments as OnboardingCubit;
-      return HomeScreen(onboardingCubit: onboardingCubit);
+      return const HomeScreen();
     },
   };
 }

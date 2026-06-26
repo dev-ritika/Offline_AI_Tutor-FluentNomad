@@ -12,7 +12,7 @@ class Splash extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cubit = sl<OnboardingCubit>();
+    final cubit = sl<OnboardingCubit>()..getUserSavedData();
 
     return BlocProvider.value(value: cubit, child: const SplashScreen());
   }
@@ -38,10 +38,7 @@ class _SplashScreenState extends State<SplashScreen> {
             .updateOnboardingStatus();
 
         if (onboardingCompleted) {
-          Navigator.of(context).pushReplacementNamed(
-            RoutesNames.homeScreen,
-            arguments: context.read<OnboardingCubit>(),
-          );
+          Navigator.of(context).pushReplacementNamed(RoutesNames.homeScreen);
         } else {
           Navigator.of(context).pushReplacementNamed(
             RoutesNames.onboardingScreen,

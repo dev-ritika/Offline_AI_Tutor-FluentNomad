@@ -7,8 +7,8 @@ import 'package:offline_ai_tutor/features/home/data/data_model/home_data_model.d
 import 'package:offline_ai_tutor/features/onboarding/data/data_model/language_model.dart';
 import 'package:offline_ai_tutor/features/onboarding/data/data_model/level_data_model.dart';
 import 'package:offline_ai_tutor/features/onboarding/data/data_model/llm_model_install.dart';
-import 'package:offline_ai_tutor/features/onboarding/data/data_model/user_data_model.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/entities/model_install_enum.dart';
+import 'package:offline_ai_tutor/features/user/data/data_model/user_data_model.dart';
 
 extension HiveRegistrar on HiveInterface {
   void registerAdapters() {

@@ -44,8 +44,6 @@ import 'package:offline_ai_tutor/features/home/domain/use_cases/save_home_data.d
     as _i135;
 import 'package:offline_ai_tutor/features/home/presentation/cubit/home_data_cubit.dart'
     as _i701;
-import 'package:offline_ai_tutor/features/onboarding/data/data_model/user_data_model.dart'
-    as _i702;
 import 'package:offline_ai_tutor/features/onboarding/data/data_sources/get_model_install_status_source.dart'
     as _i1028;
 import 'package:offline_ai_tutor/features/onboarding/data/data_sources/install_model_data_source.dart'
@@ -106,6 +104,18 @@ import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/save_user_
     as _i1042;
 import 'package:offline_ai_tutor/features/onboarding/presentation/cubit/onboarding_cubit.dart'
     as _i960;
+import 'package:offline_ai_tutor/features/user/data/data_model/user_data_model.dart'
+    as _i666;
+import 'package:offline_ai_tutor/features/user/data/data_source/get_user_data_source.dart'
+    as _i861;
+import 'package:offline_ai_tutor/features/user/data/repositories/get_user_data_repo_impl.dart'
+    as _i1059;
+import 'package:offline_ai_tutor/features/user/domain/repositories/get_user_data_repository.dart'
+    as _i907;
+import 'package:offline_ai_tutor/features/user/domain/use_cases/get_user_data.dart'
+    as _i76;
+import 'package:offline_ai_tutor/features/user/presentation/cubit/user_data_cubit.dart'
+    as _i1036;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -132,25 +142,9 @@ extension GetItInjectableX on _i174.GetIt {
       () => hiveBoxesModule.homeDataBox,
       instanceName: 'homeData',
     );
-    gh.lazySingleton<_i738.Box<_i702.UserDataModel>>(
+    gh.lazySingleton<_i738.Box<_i666.UserDataModel>>(
       () => hiveBoxesModule.getUserPrefBox,
       instanceName: 'userPrefs',
-    );
-    gh.lazySingleton<_i463.SaveUserDataLocallyDataSource>(
-      () => _i463.SaveUserDataLocallyDataSourceImpl(
-        gh<_i1055.Box<_i702.UserDataModel>>(instanceName: 'userPrefs'),
-      ),
-    );
-    gh.lazySingleton<_i649.SaveUserDataRepository>(
-      () => _i974.SaveUserDataRepoImpl(
-        saveUserDataLocallyDataSource:
-            gh<_i463.SaveUserDataLocallyDataSource>(),
-      ),
-    );
-    gh.lazySingleton<_i1042.SaveUserData>(
-      () => _i1042.SaveUserData(
-        saveUserDataRepo: gh<_i649.SaveUserDataRepository>(),
-      ),
     );
     gh.lazySingleton<_i984.LevelRepository>(
       () => _i936.LevelRepoImpl(gh<_i510.LevelLocalDataSource>()),
@@ -173,6 +167,13 @@ extension GetItInjectableX on _i174.GetIt {
         downloaderClient: gh<_i998.DownloaderClient>(),
       ),
     );
+    gh.lazySingleton<_i861.GetUserDataSource>(
+      () => _i861.GetUserDataSourceImpl(
+        userPrefBox: gh<_i170.Box<_i666.UserDataModel>>(
+          instanceName: 'userPrefs',
+        ),
+      ),
+    );
     gh.lazySingleton<_i87.GetHomeDataSource>(
       () => _i87.GetHomeDataSourceImpl(
         homeDataBox: gh<_i738.Box<_i1057.HomeDataModel>>(
@@ -182,16 +183,6 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i132.LLMModelDataSource>(
       () => _i132.LLMModelDataSourceImpl(dioClient: gh<_i536.DioClient>()),
-    );
-    gh.lazySingleton<_i1028.GetModelInstallStatusSource>(
-      () => _i1028.GetModelInstallStatusSourceImpl(
-        installStatusBox: gh<_i170.Box<List<dynamic>>>(
-          instanceName: 'modelsInstall',
-        ),
-        userPrefBox: gh<_i170.Box<_i702.UserDataModel>>(
-          instanceName: 'userPrefs',
-        ),
-      ),
     );
     gh.lazySingleton<_i52.SaveHomeDataSource>(
       () => _i52.SaveHomeDataSourceImpl(
@@ -225,6 +216,11 @@ extension GetItInjectableX on _i174.GetIt {
         languageDataSource: gh<_i547.LanguageLocalDataSource>(),
       ),
     );
+    gh.lazySingleton<_i463.SaveUserDataLocallyDataSource>(
+      () => _i463.SaveUserDataLocallyDataSourceImpl(
+        gh<_i1055.Box<_i666.UserDataModel>>(instanceName: 'userPrefs'),
+      ),
+    );
     gh.lazySingleton<_i255.SaveModelInstallStatusrepository>(
       () => _i999.SaveModelInstallStatusRepositoryImpl(
         saveModelsInstallStatusSource:
@@ -234,9 +230,14 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i1031.GetLevels>(
       () => _i1031.GetLevels(gh<_i984.LevelRepository>()),
     );
-    gh.lazySingleton<_i546.GetModelInstallStatusRepository>(
-      () => _i862.GetModelInstallStatusRepoImpl(
-        getModelInstallStatusSource: gh<_i1028.GetModelInstallStatusSource>(),
+    gh.lazySingleton<_i1028.GetModelInstallStatusSource>(
+      () => _i1028.GetModelInstallStatusSourceImpl(
+        installStatusBox: gh<_i170.Box<List<dynamic>>>(
+          instanceName: 'modelsInstall',
+        ),
+        userPrefBox: gh<_i170.Box<_i666.UserDataModel>>(
+          instanceName: 'userPrefs',
+        ),
       ),
     );
     gh.lazySingleton<_i651.GetHomeDataRepository>(
@@ -249,14 +250,24 @@ extension GetItInjectableX on _i174.GetIt {
         languageRepository: gh<_i394.LanguageRepository>(),
       ),
     );
-    gh.lazySingleton<_i196.GetModelInstallStatus>(
-      () => _i196.GetModelInstallStatus(
-        getModelInstallStatusRepository:
-            gh<_i546.GetModelInstallStatusRepository>(),
-      ),
-    );
     gh.lazySingleton<_i818.GetModels>(
       () => _i818.GetModels(llmModelRepository: gh<_i333.LlmModelRepository>()),
+    );
+    gh.lazySingleton<_i649.SaveUserDataRepository>(
+      () => _i974.SaveUserDataRepoImpl(
+        saveUserDataLocallyDataSource:
+            gh<_i463.SaveUserDataLocallyDataSource>(),
+      ),
+    );
+    gh.lazySingleton<_i1042.SaveUserData>(
+      () => _i1042.SaveUserData(
+        saveUserDataRepo: gh<_i649.SaveUserDataRepository>(),
+      ),
+    );
+    gh.lazySingleton<_i907.GetUserDataRepository>(
+      () => _i1059.GetUserDataRepoImpl(
+        getUserDataSource: gh<_i861.GetUserDataSource>(),
+      ),
     );
     gh.lazySingleton<_i247.SaveModelInstallStatus>(
       () => _i247.SaveModelInstallStatus(
@@ -268,10 +279,36 @@ extension GetItInjectableX on _i174.GetIt {
         installModelRepository: gh<_i550.InstallModelRepository>(),
       ),
     );
+    gh.lazySingleton<_i76.GetUserData>(
+      () => _i76.GetUserData(
+        getUserDataRepository: gh<_i907.GetUserDataRepository>(),
+      ),
+    );
     gh.lazySingleton<_i327.GetHomeData>(
       () => _i327.GetHomeData(
         getHomeDataRepository: gh<_i651.GetHomeDataRepository>(),
       ),
+    );
+    gh.lazySingleton<_i546.GetModelInstallStatusRepository>(
+      () => _i862.GetModelInstallStatusRepoImpl(
+        getModelInstallStatusSource: gh<_i1028.GetModelInstallStatusSource>(),
+      ),
+    );
+    gh.lazySingleton<_i196.GetModelInstallStatus>(
+      () => _i196.GetModelInstallStatus(
+        getModelInstallStatusRepository:
+            gh<_i546.GetModelInstallStatusRepository>(),
+      ),
+    );
+    gh.factory<_i701.HomeDataCubit>(
+      () => _i701.HomeDataCubit(
+        saveData: gh<_i135.SaveHomeData>(),
+        getData: gh<_i327.GetHomeData>(),
+        getUserData: gh<_i76.GetUserData>(),
+      ),
+    );
+    gh.factory<_i1036.UserDataCubit>(
+      () => _i1036.UserDataCubit(getUserData: gh<_i76.GetUserData>()),
     );
     gh.factory<_i960.OnboardingCubit>(
       () => _i960.OnboardingCubit(
@@ -282,12 +319,7 @@ extension GetItInjectableX on _i174.GetIt {
         installModel: gh<_i132.InstallModel>(),
         saveModelInstallStatus: gh<_i247.SaveModelInstallStatus>(),
         getModelInstallStatus: gh<_i196.GetModelInstallStatus>(),
-      ),
-    );
-    gh.factory<_i701.HomeDataCubit>(
-      () => _i701.HomeDataCubit(
-        saveData: gh<_i135.SaveHomeData>(),
-        getData: gh<_i327.GetHomeData>(),
+        getUserData: gh<_i76.GetUserData>(),
       ),
     );
     return this;

@@ -12,8 +12,7 @@ import 'package:offline_ai_tutor/features/home/presentation/widgets/user_details
 import 'package:offline_ai_tutor/features/onboarding/presentation/cubit/onboarding_cubit.dart';
 
 class HomeScreen extends StatefulWidget {
-  final OnboardingCubit onboardingCubit;
-  const HomeScreen({super.key, required this.onboardingCubit});
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -21,16 +20,11 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int screenIndex = 0;
-  List screensList = [];
+  List<Widget> screensList = [];
 
   @override
   void initState() {
-    screensList = [
-      HomeScreen(onboardingCubit: widget.onboardingCubit),
-      HomeScreen(onboardingCubit: widget.onboardingCubit),
-      HomeScreen(onboardingCubit: widget.onboardingCubit),
-      HomeScreen(onboardingCubit: widget.onboardingCubit),
-    ];
+    screensList = [HomeScreen(), HomeScreen(), HomeScreen(), HomeScreen()];
     super.initState();
   }
 
@@ -41,19 +35,11 @@ class _HomeScreenState extends State<HomeScreen> {
         BlocProvider(
           lazy: false,
           create: (_) {
-            return sl<HomeDataCubit>();
+            return sl<HomeDataCubit>()..getUserLocalData();
           },
         ),
-        BlocProvider.value(value: widget.onboardingCubit),
       ],
       child: Scaffold(
-        // floatingActionButton: FloatingActionButton(
-        //   onPressed: () {},
-        //   child: Icon(Icons.abc),
-        //   shape: CircleBorder(),
-        //   backgroundColor: ColorConsts.primaryColor50,
-        // ),
-        //  floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: AnimatedBottomNavigationBar(
           icons: const <IconData>[
             Icons.home,
@@ -80,23 +66,25 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
 
         body: const SafeArea(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 18, vertical: 25),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                UserDetailsContainer(),
-                SizedBox(height: 20),
-                StreakContainer(),
-                SizedBox(height: 20),
-                Text("QUICK START ✌️"),
-                SizedBox(height: 10),
-                ActionsGrid(),
-                SizedBox(height: 20),
-                Text("MAINTAIN YOUR STREAK ⏱️"),
-                SizedBox(height: 10),
-                GoalContainer(),
-              ],
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 18, vertical: 25),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  UserDetailsContainer(),
+                  SizedBox(height: 20),
+                  StreakContainer(),
+                  SizedBox(height: 20),
+                  Text("QUICK START ✌️"),
+                  SizedBox(height: 10),
+                  ActionsGrid(),
+                  SizedBox(height: 20),
+                  Text("MAINTAIN YOUR STREAK ⏱️"),
+                  SizedBox(height: 10),
+                  GoalContainer(),
+                ],
+              ),
             ),
           ),
         ),

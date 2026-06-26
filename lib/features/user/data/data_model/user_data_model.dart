@@ -2,7 +2,7 @@ import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 import 'package:offline_ai_tutor/core/storage/hive/hive_type_ids.dart';
 import 'package:offline_ai_tutor/features/onboarding/data/data_model/language_model.dart';
 import 'package:offline_ai_tutor/features/onboarding/data/data_model/level_data_model.dart';
-import 'package:offline_ai_tutor/features/onboarding/domain/entities/user_data.dart';
+import 'package:offline_ai_tutor/features/user/domain/entities/user_data.dart';
 part 'user_data_model.g.dart';
 
 @HiveType(typeId: HiveTypeIds.userDataModelId)
