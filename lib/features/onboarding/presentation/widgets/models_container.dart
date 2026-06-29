@@ -7,7 +7,6 @@ import 'package:offline_ai_tutor/features/onboarding/domain/entities/model_insta
 import 'package:offline_ai_tutor/features/onboarding/presentation/cubit/onboarding_cubit.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/cubit/onboarding_state.dart';
 import 'package:offline_ai_tutor/core/utils/helpers/container_color_model.dart';
-import 'package:offline_ai_tutor/features/onboarding/presentation/utils/enums/model_install_status_enum.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/entities/model_install_data.dart';
 
 class ModelsContainer extends StatelessWidget {

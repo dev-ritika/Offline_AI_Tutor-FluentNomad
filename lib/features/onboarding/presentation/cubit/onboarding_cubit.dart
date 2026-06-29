@@ -225,7 +225,6 @@ class OnboardingCubit extends Cubit<OnboardingState> {
         emit(state.copyWith(error: l, status: StateStatusEnum.error));
       },
       (r) {
-        print("userr dataa $r");
         if (r != null) {
           emit(
             state.copyWith(

@@ -7,7 +7,6 @@ import 'package:offline_ai_tutor/features/onboarding/data/data_model/level_data_
 import 'package:offline_ai_tutor/features/onboarding/data/data_model/llm_model_install.dart';
 import 'package:offline_ai_tutor/features/user/data/data_model/user_data_model.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/entities/model_install_enum.dart';
-import 'package:offline_ai_tutor/features/onboarding/presentation/utils/enums/model_install_status_enum.dart';
 
 abstract interface class HiveInitializer {
   Future<void> init();

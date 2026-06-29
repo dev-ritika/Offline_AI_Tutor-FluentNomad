@@ -3,9 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:offline_ai_tutor/core/utils/constants/assets_consts.dart';
 import 'package:offline_ai_tutor/features/home/presentation/cubit/home_data_cubit.dart';
 import 'package:offline_ai_tutor/features/home/presentation/cubit/home_data_state.dart';
-import 'package:offline_ai_tutor/features/onboarding/domain/entities/language.dart';
-import 'package:offline_ai_tutor/features/onboarding/presentation/cubit/onboarding_cubit.dart';
-import 'package:offline_ai_tutor/features/onboarding/presentation/cubit/onboarding_state.dart';
 import 'package:offline_ai_tutor/features/user/domain/entities/user_data.dart';
 
 class UserDetailsContainer extends StatelessWidget {

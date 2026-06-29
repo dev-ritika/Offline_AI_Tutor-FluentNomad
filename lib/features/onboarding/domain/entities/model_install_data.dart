@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/entities/model_install_enum.dart';
-import 'package:offline_ai_tutor/features/onboarding/presentation/utils/enums/model_install_status_enum.dart';
 
 class ModelInstallData extends Equatable {
   final String id;

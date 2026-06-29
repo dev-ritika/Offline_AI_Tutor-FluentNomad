@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:offline_ai_tutor/core/common_widgets/select_icon.dart';
 import 'package:offline_ai_tutor/core/utils/helpers/container_color_model.dart';
 
 class InfoContainer extends StatelessWidget {
@@ -58,7 +57,7 @@ class InfoContainer extends StatelessWidget {
               children: [
                 topIcon ?? const SizedBox.shrink(),
 
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
 
                 Text(
                   title,

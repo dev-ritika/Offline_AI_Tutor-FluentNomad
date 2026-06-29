@@ -21,8 +21,6 @@ class UserDataCubit extends Cubit<UserDataState> {
       },
       (r) {
         emit(state.copyWith(userData: r));
-
-        print("callleddd ${r?.userName}");
       },
     );
   }
