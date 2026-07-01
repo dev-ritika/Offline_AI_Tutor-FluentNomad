@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:offline_ai_tutor/config/routes/routes_names.dart';
 import 'package:offline_ai_tutor/features/home/presentation/screen/home.dart';
+import 'package:offline_ai_tutor/features/navigator_tab/presentation/screen/navigator_tab.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/cubit/onboarding_cubit.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/screen/onboarding.dart';
 
@@ -15,6 +16,10 @@ class RoutesConfig {
     },
     RoutesNames.homeScreen: (context) {
       return const HomeScreen();
+    },
+
+    RoutesNames.navigatorTab: (context) {
+      return const NavigatorTab();
     },
   };
 }

@@ -48,7 +48,7 @@ class OnboardingListeners extends StatelessWidget {
               previous.status != current.status &&
               current.status == StateStatusEnum.saved,
           listener: (context, state) {
-            Navigator.of(context).pushNamed(RoutesNames.homeScreen);
+            Navigator.of(context).pushNamed(RoutesNames.navigatorTab);
             Fluttertoast.showToast(msg: "Saved successfully");
 
             //TO DO code to navigate next screen
