@@ -8,21 +8,47 @@ class HomeDataModel {
   @HiveField(0)
   final int streakDays;
 
-  HomeDataModel({required this.streakDays});
+  @HiveField(1)
+  final int? elapsedTimeToday;
+
+  @HiveField(2)
+  final DateTime? lastCompletedDate;
+
+  HomeDataModel({
+    required this.streakDays,
+    required this.elapsedTimeToday,
+    required this.lastCompletedDate,
+  });
 
   factory HomeDataModel.fromJson(Map<String, dynamic> data) {
-    return HomeDataModel(streakDays: data['streakDays']);
+    return HomeDataModel(
+      streakDays: data['streakDays'],
+      elapsedTimeToday: data['elapsedTimeToday'],
+      lastCompletedDate: data['lastCompletedDate'],
+    );
   }
 
   Map<String, dynamic> toJson(HomeDataModel data) {
-    return {"streakDays": data.streakDays};
+    return {
+      "streakDays": data.streakDays,
+      "elapsedTimeToday": data.elapsedTimeToday,
+      "lastCompletedDate": data.lastCompletedDate,
+    };
   }
 
   HomeData toDomain() {
-    return HomeData(streakDays: streakDays);
+    return HomeData(
+      streakDays: streakDays,
+      elapsedTimeToday: elapsedTimeToday,
+      lastCompletedDate: lastCompletedDate,
+    );
   }
 
   factory HomeDataModel.fromDomain(HomeData data) {
-    return HomeDataModel(streakDays: data.streakDays);
+    return HomeDataModel(
+      streakDays: data.streakDays,
+      elapsedTimeToday: data.elapsedTimeToday,
+      lastCompletedDate: data.lastCompletedDate,
+    );
   }
 }

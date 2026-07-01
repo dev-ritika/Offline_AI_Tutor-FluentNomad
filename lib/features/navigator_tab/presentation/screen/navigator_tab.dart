@@ -6,10 +6,6 @@ import 'package:offline_ai_tutor/core/utils/constants/color_consts.dart';
 import 'package:offline_ai_tutor/features/Dummy/presentation/dummy_screen.dart';
 import 'package:offline_ai_tutor/features/home/presentation/cubit/home_data_cubit.dart';
 import 'package:offline_ai_tutor/features/home/presentation/screen/home.dart';
-import 'package:offline_ai_tutor/features/home/presentation/widgets/actions_grid.dart';
-import 'package:offline_ai_tutor/features/home/presentation/widgets/goal_container.dart';
-import 'package:offline_ai_tutor/features/home/presentation/widgets/streak_container.dart';
-import 'package:offline_ai_tutor/features/home/presentation/widgets/user_details_container.dart';
 
 class NavigatorTab extends StatefulWidget {
   const NavigatorTab({super.key});

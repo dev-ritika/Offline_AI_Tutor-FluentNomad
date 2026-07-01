@@ -1,7 +1,7 @@
 import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
+import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 import 'package:offline_ai_tutor/core/error_handling/failures.dart';
 import 'package:offline_ai_tutor/core/utils/constants/global_consts.dart';
@@ -14,7 +14,7 @@ import 'package:offline_ai_tutor/features/user/domain/entities/user_data.dart';
 import 'package:offline_ai_tutor/features/user/domain/use_cases/get_user_data.dart';
 
 @injectable
-class HomeDataCubit extends Cubit<HomeDataState> {
+class HomeDataCubit extends Cubit<HomeDataState> with WidgetsBindingObserver {
   final SaveHomeData saveData;
   final GetHomeData getData;
   final GetUserData getUserData;
@@ -29,21 +29,52 @@ class HomeDataCubit extends Cubit<HomeDataState> {
            elapsedTime: 0,
          ),
        ) {
+    WidgetsBinding.instance.addObserver(this);
+
     getHomeData();
     saveHomeData();
   }
 
-  late Timer timer;
+  Timer? timer;
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      timer?.cancel();
+    }
+    if (state == AppLifecycleState.resumed) {
+      saveHomeData();
+    }
+    super.didChangeAppLifecycleState(state);
+  }
 
   Future<void> saveHomeData() async {
-    int time = 0;
+    int time = state.elapsedTime;
 
-    timer = Timer.periodic(const Duration(minutes: 1), (timer) async {
+    if (time >= GlobalConsts.kDailyGoalMinutes) return;
+
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
       time++;
+
       emit(state.copyWith(elapsedTime: time));
 
+      await saveData(
+        HomeData(
+          streakDays: state.streakDays,
+          elapsedTimeToday: time,
+          lastCompletedDate: DateUtils.dateOnly(DateTime.now()),
+        ),
+      );
+
       if (time >= GlobalConsts.kDailyGoalMinutes) {
-        await saveData(HomeData(streakDays: state.streakDays + 1));
+        await saveData(
+          HomeData(
+            streakDays: state.streakDays + 1,
+            elapsedTimeToday: time,
+            lastCompletedDate: DateUtils.dateOnly(DateTime.now()),
+          ),
+        );
+
         emit(state.copyWith(streakDays: state.streakDays + 1));
         timer.cancel();
       }
@@ -64,6 +95,10 @@ class HomeDataCubit extends Cubit<HomeDataState> {
           state.copyWith(
             streakDays: r?.streakDays,
             stateStatus: StateStatusEnum.loaded,
+            elapsedTime:
+                r?.lastCompletedDate == DateUtils.dateOnly(DateTime.now())
+                ? r?.elapsedTimeToday
+                : 0,
           ),
         );
       },
@@ -85,7 +120,8 @@ class HomeDataCubit extends Cubit<HomeDataState> {
 
   @override
   Future<void> close() {
-    timer.cancel();
+    timer?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
     return super.close();
   }
 }

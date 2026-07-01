@@ -16,15 +16,23 @@ class HomeDataModelAdapter extends TypeAdapter<HomeDataModel> {
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return HomeDataModel(streakDays: (fields[0] as num).toInt());
+    return HomeDataModel(
+      streakDays: (fields[0] as num).toInt(),
+      elapsedTimeToday: (fields[1] as num?)?.toInt(),
+      lastCompletedDate: fields[2] as DateTime?,
+    );
   }
 
   @override
   void write(BinaryWriter writer, HomeDataModel obj) {
     writer
-      ..writeByte(1)
+      ..writeByte(3)
       ..writeByte(0)
-      ..write(obj.streakDays);
+      ..write(obj.streakDays)
+      ..writeByte(1)
+      ..write(obj.elapsedTimeToday)
+      ..writeByte(2)
+      ..write(obj.lastCompletedDate);
   }
 
   @override
