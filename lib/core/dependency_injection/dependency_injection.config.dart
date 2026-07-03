@@ -304,7 +304,6 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i701.HomeDataCubit(
         saveData: gh<_i135.SaveHomeData>(),
         getData: gh<_i327.GetHomeData>(),
-        getUserData: gh<_i76.GetUserData>(),
       ),
     );
     gh.factory<_i1036.UserDataCubit>(

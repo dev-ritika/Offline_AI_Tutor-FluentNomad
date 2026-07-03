@@ -10,29 +10,20 @@ import 'package:offline_ai_tutor/features/home/domain/entities/home_data.dart';
 import 'package:offline_ai_tutor/features/home/domain/use_cases/get_home_data.dart';
 import 'package:offline_ai_tutor/features/home/domain/use_cases/save_home_data.dart';
 import 'package:offline_ai_tutor/features/home/presentation/cubit/home_data_state.dart';
-import 'package:offline_ai_tutor/features/user/domain/entities/user_data.dart';
-import 'package:offline_ai_tutor/features/user/domain/use_cases/get_user_data.dart';
 
 @injectable
 class HomeDataCubit extends Cubit<HomeDataState> with WidgetsBindingObserver {
   final SaveHomeData saveData;
   final GetHomeData getData;
-  final GetUserData getUserData;
-  HomeDataCubit({
-    required this.saveData,
-    required this.getData,
-    required this.getUserData,
-  }) : super(
-         const HomeDataState(
-           streakDays: 0,
-           stateStatus: StateStatusEnum.empty,
-           elapsedTime: 0,
-         ),
-       ) {
+  HomeDataCubit({required this.saveData, required this.getData})
+    : super(
+        const HomeDataState(
+          streakDays: 0,
+          stateStatus: StateStatusEnum.empty,
+          elapsedTime: 0,
+        ),
+      ) {
     WidgetsBinding.instance.addObserver(this);
-
-    getHomeData();
-    saveHomeData();
   }
 
   Timer? timer;
@@ -48,15 +39,50 @@ class HomeDataCubit extends Cubit<HomeDataState> with WidgetsBindingObserver {
     super.didChangeAppLifecycleState(state);
   }
 
+  void getHomeData() {
+    emit(state.copyWith(stateStatus: StateStatusEnum.loading));
+
+    final Either<Failures, HomeData?> data = getData();
+
+    data.fold(
+      (l) {
+        emit(state.copyWith(stateStatus: StateStatusEnum.error));
+      },
+      (r) {
+        emit(
+          state.copyWith(
+            streakDays: r?.streakDays,
+            stateStatus: StateStatusEnum.loaded,
+            lastCompletedDate: r?.lastCompletedDate,
+            elapsedTime:
+                DateUtils.isSameDay(r?.lastCompletedDate!, DateTime.now())
+                ? r?.elapsedTimeToday
+                : 0,
+          ),
+        );
+      },
+    );
+  }
+
   Future<void> saveHomeData() async {
     int time = state.elapsedTime;
+    int streakDays = state.streakDays;
 
-    if (time >= GlobalConsts.kDailyGoalMinutes) return;
+    if (time >= GlobalConsts.kDailyGoalMinutes ||
+        DateUtils.isSameDay(state.lastCompletedDate!, DateTime.now()))
+      return;
 
-    timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
+    if (DateUtils.dateOnly(DateTime.now()).difference(
+          state.lastCompletedDate ?? DateUtils.dateOnly(DateTime.now()),
+        ) >
+        const Duration(days: 1)) {
+      streakDays = 0;
+    }
+
+    timer = Timer.periodic(const Duration(minutes: 1), (timer) async {
       time++;
 
-      emit(state.copyWith(elapsedTime: time));
+      emit(state.copyWith(elapsedTime: time, streakDays: streakDays));
 
       await saveData(
         HomeData(
@@ -79,43 +105,6 @@ class HomeDataCubit extends Cubit<HomeDataState> with WidgetsBindingObserver {
         timer.cancel();
       }
     });
-  }
-
-  void getHomeData() {
-    emit(state.copyWith(stateStatus: StateStatusEnum.loading));
-
-    final Either<Failures, HomeData?> data = getData();
-
-    data.fold(
-      (l) {
-        emit(state.copyWith(stateStatus: StateStatusEnum.error));
-      },
-      (r) {
-        emit(
-          state.copyWith(
-            streakDays: r?.streakDays,
-            stateStatus: StateStatusEnum.loaded,
-            elapsedTime:
-                r?.lastCompletedDate == DateUtils.dateOnly(DateTime.now())
-                ? r?.elapsedTimeToday
-                : 0,
-          ),
-        );
-      },
-    );
-  }
-
-  void getUserLocalData() {
-    final Either<Failures, UserData?> data = getUserData();
-
-    data.fold(
-      (l) {
-        emit(state.copyWith(stateStatus: StateStatusEnum.error));
-      },
-      (r) {
-        emit(state.copyWith(userData: r));
-      },
-    );
   }
 
   @override

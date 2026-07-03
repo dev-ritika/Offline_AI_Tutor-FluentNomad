@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:offline_ai_tutor/core/utils/constants/assets_consts.dart';
-import 'package:offline_ai_tutor/features/home/presentation/cubit/home_data_cubit.dart';
-import 'package:offline_ai_tutor/features/home/presentation/cubit/home_data_state.dart';
 import 'package:offline_ai_tutor/features/user/domain/entities/user_data.dart';
+import 'package:offline_ai_tutor/features/user/presentation/cubit/user_data_cubit.dart';
+import 'package:offline_ai_tutor/features/user/presentation/cubit/user_data_state.dart';
 
 class UserDetailsContainer extends StatelessWidget {
   const UserDetailsContainer({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocSelector<HomeDataCubit, HomeDataState, UserData?>(
+    return BlocSelector<UserDataCubit, UserDataState, UserData?>(
       selector: (state) => state.userData,
       builder: (context, data) {
         return Row(

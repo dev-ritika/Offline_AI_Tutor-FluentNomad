@@ -25,7 +25,7 @@ class DownloaderClient {
           baseDirectory: BaseDirectory.applicationDocuments,
           directory: 'models',
           filename: fileName,
-          retries: 1,
+          retries: 3,
           url: url,
         );
 

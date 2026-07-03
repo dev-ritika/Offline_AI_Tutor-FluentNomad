@@ -5,6 +5,7 @@ import 'package:offline_ai_tutor/config/routes/routes_names.dart';
 import 'package:offline_ai_tutor/core/utils/enums/state_enum.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/cubit/onboarding_cubit.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/cubit/onboarding_state.dart';
+import 'package:offline_ai_tutor/features/user/presentation/cubit/user_data_cubit.dart';
 
 class OnboardingListeners extends StatelessWidget {
   final Widget child;
@@ -49,6 +50,7 @@ class OnboardingListeners extends StatelessWidget {
               current.status == StateStatusEnum.saved,
           listener: (context, state) {
             Navigator.of(context).pushNamed(RoutesNames.navigatorTab);
+
             Fluttertoast.showToast(msg: "Saved successfully");
 
             //TO DO code to navigate next screen

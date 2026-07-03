@@ -1,10 +1,7 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:offline_ai_tutor/core/dependency_injection/dependency_injection.dart';
 import 'package:offline_ai_tutor/core/utils/constants/color_consts.dart';
 import 'package:offline_ai_tutor/features/Dummy/presentation/dummy_screen.dart';
-import 'package:offline_ai_tutor/features/home/presentation/cubit/home_data_cubit.dart';
 import 'package:offline_ai_tutor/features/home/presentation/screen/home.dart';
 
 class NavigatorTab extends StatefulWidget {
@@ -31,43 +28,33 @@ class _NavigatorTabState extends State<NavigatorTab> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          lazy: false,
-          create: (_) {
-            return sl<HomeDataCubit>()..getUserLocalData();
-          },
-        ),
-      ],
-      child: Scaffold(
-        bottomNavigationBar: AnimatedBottomNavigationBar(
-          icons: const <IconData>[
-            Icons.home,
-            Icons.mic,
-            Icons.menu_book_outlined,
-            Icons.auto_graph_rounded,
-          ],
-          onTap: (int index) {
-            setState(() {
-              screenIndex = index;
-            });
-          },
-          activeIndex: screenIndex,
-          notchSmoothness: NotchSmoothness.verySmoothEdge,
-          gapLocation: GapLocation.none,
-          backgroundColor: ColorConsts.buttonSecondaryColor,
-          activeColor: ColorConsts.primaryColor,
-          blurEffect: true,
-          elevation: 20,
-          leftCornerRadius: 25,
-          rightCornerRadius: 25,
+    return Scaffold(
+      bottomNavigationBar: AnimatedBottomNavigationBar(
+        icons: const <IconData>[
+          Icons.home,
+          Icons.mic,
+          Icons.menu_book_outlined,
+          Icons.auto_graph_rounded,
+        ],
+        onTap: (int index) {
+          setState(() {
+            screenIndex = index;
+          });
+        },
+        activeIndex: screenIndex,
+        notchSmoothness: NotchSmoothness.verySmoothEdge,
+        gapLocation: GapLocation.none,
+        backgroundColor: ColorConsts.buttonSecondaryColor,
+        activeColor: ColorConsts.primaryColor,
+        blurEffect: true,
+        elevation: 20,
+        leftCornerRadius: 25,
+        rightCornerRadius: 25,
 
-          // notchMargin: 20,
-        ),
-
-        body: screensList[screenIndex],
+        // notchMargin: 20,
       ),
+
+      body: screensList[screenIndex],
     );
   }
 }

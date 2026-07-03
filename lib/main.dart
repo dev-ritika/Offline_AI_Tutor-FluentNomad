@@ -23,7 +23,9 @@ void main() async {
           create: (context) => sl<UserDataCubit>()..getUserLocalData(),
         ),
         BlocProvider(
-          create: (context) => sl<HomeDataCubit>()..getUserLocalData(),
+          create: (context) => sl<HomeDataCubit>()
+            ..getHomeData()
+            ..saveHomeData(),
         ),
       ],
 
