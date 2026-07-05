@@ -51,6 +51,8 @@ class OnboardingListeners extends StatelessWidget {
           listener: (context, state) {
             Navigator.of(context).pushNamed(RoutesNames.navigatorTab);
 
+            context.read<UserDataCubit>().getUserLocalData();
+
             Fluttertoast.showToast(msg: "Saved successfully");
 
             //TO DO code to navigate next screen
