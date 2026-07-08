@@ -1,7 +1,7 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:offline_ai_tutor/core/utils/constants/color_consts.dart';
-import 'package:offline_ai_tutor/features/Dummy/presentation/dummy_screen.dart';
+import 'package:offline_ai_tutor/features/talk/presentation/talk_screen.dart';
 import 'package:offline_ai_tutor/features/home/presentation/screen/home.dart';
 
 class NavigatorTab extends StatefulWidget {
@@ -19,7 +19,7 @@ class _NavigatorTabState extends State<NavigatorTab> {
   void initState() {
     screensList = [
       const HomeScreen(),
-      const DummyScreen(),
+      const TalkScreen(),
       const HomeScreen(),
       const HomeScreen(),
     ];
