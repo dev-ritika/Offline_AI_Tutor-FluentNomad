@@ -44,6 +44,8 @@ class DownloaderClient {
           yield right(DownloadModel(download: percentage));
         }
 
+        print("where downloaded ${await task.filePath()}");
+
         final TaskStatusUpdate status = await data;
 
         if (status.status == TaskStatus.complete) {

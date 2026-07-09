@@ -52,6 +52,7 @@ dependencies:
   path_provider: ^2.1.5
   background_downloader: ^9.5.5
   animated_bottom_navigation_bar: ^1.4.0
+  path: ^1.9.1
 
 dev_dependencies:
   flutter_test:

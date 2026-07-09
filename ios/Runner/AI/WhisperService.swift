@@ -1,25 +1,18 @@
-//
-//  WhisperService.swift
-//  Runner
-//
-//  Created by el RED on 08/07/26.
-//
-
 import Foundation
-import whisper
 
-class WhisperService {
+final class WhisperService {
 
-    init() {
-        print("WhisperService initialized")
+    private let bridge = WhisperBridge()
+
+    func loadModel(at path: String) throws {
+        try bridge.loadModel(path)
     }
 
-    func transcribe(
-        modelPath: String,
-        audioPath: String,
-        language: String
-    ) throws -> String {
+    func isLoaded() -> Bool {
+        bridge.isLoaded()
+    }
 
-        return "Not implemented"
+    func release() {
+        bridge.releaseModel()
     }
 }
