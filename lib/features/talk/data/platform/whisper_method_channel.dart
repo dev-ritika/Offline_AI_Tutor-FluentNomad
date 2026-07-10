@@ -1,26 +1,13 @@
 import 'package:flutter/services.dart';
 
 class WhisperMethodChannel {
-  static const MethodChannel _whisperChannel = MethodChannel(
-    "whisper_transcribe",
-  );
-
-  // Future<String> getText({
-  //   required String modelPath,
-  //   required String audioPath,
-  //   required String language,
-  // }) async {
-  //   String text = await _whisperChannel.invokeMethod("getTranscriptedText", {
-  //     'modelPath': modelPath,
-  //     'audioPath': audioPath,
-  //     'language': language,
-  //   });
-
-  //   print("check $text");
-  //   return text;
-  // }
+  static const MethodChannel _whisperChannel =
+      MethodChannel("whisper_transcribe");
 
   Future<void> loadModel(String path) async {
-    await _whisperChannel.invokeMethod('loadModel', {'path': path});
+    await _whisperChannel.invokeMethod(
+      'loadModel',
+      {'path': path},
+    );
   }
 }

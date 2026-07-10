@@ -1,5 +1,5 @@
 import Flutter
-import UIKit
+import Foundation
 
 class WhisperPlugin: NSObject {
 
@@ -18,6 +18,7 @@ class WhisperPlugin: NSObject {
                 let args = call.arguments as? [String: Any],
                 let path = args["path"] as? String
             else {
+
                 result(
                     FlutterError(
                         code: "INVALID_ARGUMENTS",
