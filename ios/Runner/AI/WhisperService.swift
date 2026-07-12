@@ -4,15 +4,37 @@ final class WhisperService {
 
     private let bridge = WhisperBridge()
 
-    func loadModel(at path: String) throws {
-        try bridge.loadModel(path)
+    private(set) var isModelLoaded = false
+
+    @discardableResult
+    func loadModel(at modelPath: String) -> Bool {
+
+        if isModelLoaded {
+            return true
+        }
+
+        guard FileManager.default.fileExists(atPath: modelPath) else {
+            print("❌ Model not found")
+            return false
+        }
+
+        var error: NSError?
+
+        let success = bridge.loadModel(modelPath)
+        
+        bridge.loadModel(modelPath)
+
+        if let error {
+            print(error)
+        }
+
+        isModelLoaded = success
+
+        return success
     }
 
-    func isLoaded() -> Bool {
-        bridge.isLoaded()
-    }
-
-    func release() {
+    func releaseModel() {
         bridge.releaseModel()
+        isModelLoaded = false
     }
 }

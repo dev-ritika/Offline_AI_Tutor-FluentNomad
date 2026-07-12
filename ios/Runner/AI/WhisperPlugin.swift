@@ -50,6 +50,9 @@ class WhisperPlugin: NSObject {
 
             result(FlutterMethodNotImplemented)
 
+        case "isModelLoaded":
+             result(whisperService.isModelLoaded)
+
         default:
 
             result(FlutterMethodNotImplemented)

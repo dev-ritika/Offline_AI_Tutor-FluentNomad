@@ -6,39 +6,33 @@
 }
 
 - (BOOL)loadModel:(NSString *)modelPath
-            error:(NSError **)error {
+             {
 
-    NSLog(@"========== WHISPER TEST ==========");
-    NSLog(@"Model path: %@", modelPath);
-
-    BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:modelPath];
-    NSLog(@"File exists: %@", exists ? @"YES" : @"NO");
+    NSLog(@"Loading model...");
 
     struct whisper_context_params params = whisper_context_default_params();
 
     const char *path = [modelPath UTF8String];
 
-    NSLog(@"Calling whisper_init...");
-
     _context = whisper_init_from_file_with_params(path, params);
 
-    NSLog(@"Returned from whisper_init");
-
     if (_context == nullptr) {
-        NSLog(@"Model load FAILED");
+        NSLog(@"Failed to load model");
         return NO;
     }
 
-    NSLog(@"Model load SUCCESS");
-
-    whisper_free(_context);
-    _context = nullptr;
+    NSLog(@"Model loaded successfully");
 
     return YES;
 }
 
 - (BOOL)isLoaded {
-    return _context != nullptr;
+    if (_context == nullptr) {
+        return NO;
+    }
+
+    whisper_is_multilingual(_context);
+    return YES;
 }
 
 - (void)releaseModel {
