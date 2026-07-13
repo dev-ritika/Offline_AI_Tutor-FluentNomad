@@ -18,15 +18,9 @@ final class WhisperService {
             return false
         }
 
-        var error: NSError?
 
         let success = bridge.loadModel(modelPath)
-        
-        bridge.loadModel(modelPath)
 
-        if let error {
-            print(error)
-        }
 
         isModelLoaded = success
 
