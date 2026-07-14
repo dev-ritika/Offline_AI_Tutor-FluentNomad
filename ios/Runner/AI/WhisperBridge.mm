@@ -42,4 +42,11 @@
     }
 }
 
+- (NSString *)transcribe:(NSString *)audioPath {
+
+    NSLog(@"Audio Path: %@", audioPath);
+
+    return @"Hello from Whisper";
+}
+
 @end

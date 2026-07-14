@@ -46,6 +46,26 @@ class WhisperPlugin: NSObject {
                 )
             }
 
+        case "transcribe":
+
+    guard
+        let args = call.arguments as? [String: Any],
+        let audioPath = args["audioPath"] as? String
+    else {
+        result(
+            FlutterError(
+                code: "INVALID_ARGUMENTS",
+                message: "Missing audio path",
+                details: nil
+            )
+        )
+        return
+    }
+
+    let text = whisperService.transcribe(audioPath: audioPath)
+
+    result(text)
+        
         case "getTranscriptedText":
 
             result(FlutterMethodNotImplemented)

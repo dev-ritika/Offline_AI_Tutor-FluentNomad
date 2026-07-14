@@ -34,6 +34,10 @@ class _TalkScreenState extends State<TalkScreen> {
       print("what is the path $path");
 
       WhisperMethodChannel().loadModel(path);
+
+      final text = await WhisperMethodChannel().transcribe("audioPath");
+
+      print(text);
     });
 
     super.initState();

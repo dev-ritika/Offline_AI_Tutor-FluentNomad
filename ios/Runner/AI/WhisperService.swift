@@ -31,4 +31,13 @@ final class WhisperService {
         bridge.releaseModel()
         isModelLoaded = false
     }
+
+    func transcribe(audioPath: String) -> String {
+
+    guard isModelLoaded else {
+        return "Model not loaded"
+    }
+
+    return bridge.transcribe(audioPath)
+}
 }
