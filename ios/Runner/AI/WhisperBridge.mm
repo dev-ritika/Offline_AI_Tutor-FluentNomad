@@ -1,5 +1,6 @@
 #import "WhisperBridge.h"
 #import <whisper/whisper.h>
+#import <AVFoundation/AVFoundation.h>
 
 @implementation WhisperBridge {
     struct whisper_context *_context;

@@ -20,3 +20,7 @@ class AssetFailure extends Failures {
 class NetworkFailure extends Failures {
   const NetworkFailure(super.message);
 }
+
+class AudioFailure extends Failures {
+  const AudioFailure(super.message);
+}

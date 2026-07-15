@@ -53,6 +53,8 @@ dependencies:
   background_downloader: ^9.5.5
   animated_bottom_navigation_bar: ^1.4.0
   path: ^1.9.1
+  record: ^6.2.1
+  audioplayers: ^6.7.1
 
 dev_dependencies:
   flutter_test:

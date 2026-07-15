@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:offline_ai_tutor/features/talk/data/platform/whisper_method_channel.dart';
+import 'package:offline_ai_tutor/features/talk/presentation/widgets/record_cta.dart';
+import 'package:offline_ai_tutor/features/talk/presentation/widgets/talk_screen_header.dart';
 
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -45,6 +47,13 @@ class _TalkScreenState extends State<TalkScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(), body: const Text("TalkScreen"));
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 25),
+          child: Column(children: [TalkScreenHeader(), RecordCta()]),
+        ),
+      ),
+    );
   }
 }

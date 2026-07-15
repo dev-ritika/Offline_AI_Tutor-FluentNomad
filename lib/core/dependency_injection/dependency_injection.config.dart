@@ -104,6 +104,8 @@ import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/save_user_
     as _i1042;
 import 'package:offline_ai_tutor/features/onboarding/presentation/cubit/onboarding_cubit.dart'
     as _i960;
+import 'package:offline_ai_tutor/features/talk/data/data_source/recording_data_source.dart'
+    as _i409;
 import 'package:offline_ai_tutor/features/user/data/data_model/user_data_model.dart'
     as _i666;
 import 'package:offline_ai_tutor/features/user/data/data_source/get_user_data_source.dart'
@@ -145,6 +147,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i738.Box<_i666.UserDataModel>>(
       () => hiveBoxesModule.getUserPrefBox,
       instanceName: 'userPrefs',
+    );
+    gh.lazySingleton<_i409.RecordingDataSource>(
+      () => _i409.RecordingDataSourceImpl(),
     );
     gh.lazySingleton<_i984.LevelRepository>(
       () => _i936.LevelRepoImpl(gh<_i510.LevelLocalDataSource>()),
