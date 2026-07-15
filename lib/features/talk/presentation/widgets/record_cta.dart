@@ -1,8 +1,9 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:offline_ai_tutor/core/dependency_injection/dependency_injection.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:offline_ai_tutor/core/utils/constants/color_consts.dart';
-import 'package:offline_ai_tutor/features/talk/data/data_source/recording_data_source.dart';
+import 'package:offline_ai_tutor/features/talk/presentation/cubit/recording_cubit.dart';
+import 'package:offline_ai_tutor/features/talk/presentation/cubit/recording_state.dart';
 
 class RecordCta extends StatefulWidget {
   const RecordCta({super.key});
@@ -13,7 +14,7 @@ class RecordCta extends StatefulWidget {
 
 class _RecordCtaState extends State<RecordCta> {
   bool isTapped = false;
-  String? audioPath;
+  // String? audioPath;
 
   @override
   Widget build(BuildContext context) {
@@ -21,15 +22,13 @@ class _RecordCtaState extends State<RecordCta> {
       children: [
         GestureDetector(
           onTap: () async {
-            // isTapped
-            //     ? audioPath = await sl<RecordingDataSource>().stopRecording()
-            //     : sl<RecordingDataSource>().startRecording();
+            isTapped
+                ? context.read<RecordingCubit>().stopAudioRecording()
+                : context.read<RecordingCubit>().startAudioRecording();
 
-            // setState(() {
-            //   isTapped = !isTapped;
-            // });
-
-            // print("audio camee $audioPath");
+            setState(() {
+              isTapped = !isTapped;
+            });
           },
 
           child: const CircleAvatar(
@@ -51,18 +50,25 @@ class _RecordCtaState extends State<RecordCta> {
 
         Text(isTapped ? "Tap to stop" : "Tap to start"),
 
-        TextButton(
-          onPressed: () async {
-            final player = AudioPlayer();
-
-            print("wht is it $audioPath");
-
-            if (audioPath != null) {
-              print("playedd");
-              await player.play(DeviceFileSource(audioPath!));
-            }
+        BlocSelector<RecordingCubit, RecordingState, String?>(
+          selector: (state) {
+            return state.audioPath;
           },
-          child: Text("try audio"),
+          builder: (context, audioPath) {
+            return TextButton(
+              onPressed: () async {
+                final player = AudioPlayer();
+
+                print("wht is it $audioPath");
+
+                if (audioPath != null) {
+                  print("playedd");
+                  await player.play(DeviceFileSource(audioPath));
+                }
+              },
+              child: Text("try audio"),
+            );
+          },
         ),
       ],
     );

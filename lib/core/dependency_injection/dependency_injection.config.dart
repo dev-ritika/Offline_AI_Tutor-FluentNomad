@@ -106,6 +106,16 @@ import 'package:offline_ai_tutor/features/onboarding/presentation/cubit/onboardi
     as _i960;
 import 'package:offline_ai_tutor/features/talk/data/data_source/recording_data_source.dart'
     as _i409;
+import 'package:offline_ai_tutor/features/talk/data/repositories/recording_repo_impl.dart'
+    as _i927;
+import 'package:offline_ai_tutor/features/talk/domain/repositories/recording_repository.dart'
+    as _i834;
+import 'package:offline_ai_tutor/features/talk/domain/use_cases/start_recording.dart'
+    as _i861;
+import 'package:offline_ai_tutor/features/talk/domain/use_cases/stop_recording.dart'
+    as _i211;
+import 'package:offline_ai_tutor/features/talk/presentation/cubit/recording_cubit.dart'
+    as _i3;
 import 'package:offline_ai_tutor/features/user/data/data_model/user_data_model.dart'
     as _i666;
 import 'package:offline_ai_tutor/features/user/data/data_source/get_user_data_source.dart'
@@ -232,6 +242,11 @@ extension GetItInjectableX on _i174.GetIt {
             gh<_i713.SaveModelsInstallStatusSource>(),
       ),
     );
+    gh.lazySingleton<_i834.RecordingRepository>(
+      () => _i927.RecordingRepoImpl(
+        recordingDataSource: gh<_i409.RecordingDataSource>(),
+      ),
+    );
     gh.lazySingleton<_i1031.GetLevels>(
       () => _i1031.GetLevels(gh<_i984.LevelRepository>()),
     );
@@ -248,6 +263,16 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i651.GetHomeDataRepository>(
       () => _i937.GetHomeDataRepoImpl(
         getHomeDataSource: gh<_i87.GetHomeDataSource>(),
+      ),
+    );
+    gh.lazySingleton<_i861.StartRecording>(
+      () => _i861.StartRecording(
+        recordingRepository: gh<_i834.RecordingRepository>(),
+      ),
+    );
+    gh.lazySingleton<_i211.StopRecording>(
+      () => _i211.StopRecording(
+        recordingRepository: gh<_i834.RecordingRepository>(),
       ),
     );
     gh.lazySingleton<_i925.GetLanguages>(
@@ -272,6 +297,12 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i907.GetUserDataRepository>(
       () => _i1059.GetUserDataRepoImpl(
         getUserDataSource: gh<_i861.GetUserDataSource>(),
+      ),
+    );
+    gh.factory<_i3.RecordingCubit>(
+      () => _i3.RecordingCubit(
+        startRecording: gh<_i861.StartRecording>(),
+        stopRecording: gh<_i211.StopRecording>(),
       ),
     );
     gh.lazySingleton<_i247.SaveModelInstallStatus>(
