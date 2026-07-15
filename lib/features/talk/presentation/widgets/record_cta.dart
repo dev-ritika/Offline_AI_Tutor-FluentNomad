@@ -1,9 +1,9 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:offline_ai_tutor/core/utils/constants/color_consts.dart';
 import 'package:offline_ai_tutor/features/talk/presentation/cubit/recording_cubit.dart';
 import 'package:offline_ai_tutor/features/talk/presentation/cubit/recording_state.dart';
+import 'package:offline_ai_tutor/features/talk/presentation/widgets/record_cta_widget.dart';
 
 class RecordCta extends StatefulWidget {
   const RecordCta({super.key});
@@ -14,37 +14,23 @@ class RecordCta extends StatefulWidget {
 
 class _RecordCtaState extends State<RecordCta> {
   bool isTapped = false;
-  // String? audioPath;
+
+  void tapAction() async {
+    if (isTapped) {
+      context.read<RecordingCubit>().stopAudioRecording();
+    } else {
+      context.read<RecordingCubit>().startAudioRecording();
+    }
+    setState(() {
+      isTapped = !isTapped;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        GestureDetector(
-          onTap: () async {
-            isTapped
-                ? context.read<RecordingCubit>().stopAudioRecording()
-                : context.read<RecordingCubit>().startAudioRecording();
-
-            setState(() {
-              isTapped = !isTapped;
-            });
-          },
-
-          child: const CircleAvatar(
-            backgroundColor: ColorConsts.buttonSecondaryColor,
-            radius: 50,
-            child: CircleAvatar(
-              backgroundColor: ColorConsts.buttonSecondaryStrokeColor,
-              radius: 40,
-              child: CircleAvatar(
-                backgroundColor: ColorConsts.buttonPLinearColor1,
-                radius: 30,
-                child: Icon(Icons.mic, size: 30),
-              ),
-            ),
-          ),
-        ),
+        RecordCtaWidget(callback: tapAction),
 
         const SizedBox(height: 10),
 
