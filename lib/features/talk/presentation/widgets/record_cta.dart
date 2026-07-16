@@ -17,8 +17,10 @@ class _RecordCtaState extends State<RecordCta> {
 
   void tapAction() async {
     if (isTapped) {
+      print("stopped recording");
       context.read<RecordingCubit>().stopAudioRecording();
     } else {
+      print("started recording");
       context.read<RecordingCubit>().startAudioRecording();
     }
     setState(() {
@@ -32,30 +34,29 @@ class _RecordCtaState extends State<RecordCta> {
       children: [
         RecordCtaWidget(callback: tapAction),
 
-        const SizedBox(height: 10),
-
+        // const SizedBox(height: 10),
         Text(isTapped ? "Tap to stop" : "Tap to start"),
 
-        BlocSelector<RecordingCubit, RecordingState, String?>(
-          selector: (state) {
-            return state.audioPath;
-          },
-          builder: (context, audioPath) {
-            return TextButton(
-              onPressed: () async {
-                final player = AudioPlayer();
+        // BlocSelector<RecordingCubit, RecordingState, String?>(
+        //   selector: (state) {
+        //     return state.audioPath;
+        //   },
+        //   builder: (context, audioPath) {
+        //     return TextButton(
+        //       onPressed: () async {
+        //         final player = AudioPlayer();
 
-                print("wht is it $audioPath");
+        //         print("wht is it $audioPath");
 
-                if (audioPath != null) {
-                  print("playedd");
-                  await player.play(DeviceFileSource(audioPath));
-                }
-              },
-              child: Text("try audio"),
-            );
-          },
-        ),
+        //         if (audioPath != null) {
+        //           print("playedd");
+        //           await player.play(DeviceFileSource(audioPath));
+        //         }
+        //       },
+        //       child: Text("try audio"),
+        //     );
+        //   },
+        // ),
       ],
     );
   }

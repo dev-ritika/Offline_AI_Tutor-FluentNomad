@@ -22,28 +22,28 @@ class _TalkScreenWidgetState extends State<TalkScreenWidget> {
     return p.join(dir.path, "models", fileName);
   }
 
-  @override
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      // WhisperMethodChannel().getText(
-      //   modelPath: "...",
-      //   audioPath: "...",
-      //   language: "ja",
-      // );
+  // @override
+  // void initState() {
+  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+  //     // WhisperMethodChannel().getText(
+  //     //   modelPath: "...",
+  //     //   audioPath: "...",
+  //     //   language: "ja",
+  //     // );
 
-      final path = await getModelPath("ggml-base.bin");
+  //     final path = await getModelPath("ggml-base.bin");
 
-      print("what is the path $path");
+  //     print("what is the path $path");
 
-      WhisperMethodChannel().loadModel(path);
+  //     WhisperMethodChannel().loadModel(path);
 
-      final text = await WhisperMethodChannel().transcribe("audioPath");
+  //     final text = await WhisperMethodChannel().transcribe("audioPath");
 
-      print(text);
-    });
+  //     print(text);
+  //   });
 
-    super.initState();
-  }
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {

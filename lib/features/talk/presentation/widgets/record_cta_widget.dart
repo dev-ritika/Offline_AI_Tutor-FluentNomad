@@ -14,15 +14,25 @@ class RecordCtaWidget extends StatefulWidget {
 }
 
 class _RecordCtaWidgetState extends State<RecordCtaWidget>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late AnimationController controller;
+  late AnimationController fadeController;
+
   late Animation<double> animation;
+  late Animation<double> fadeAnimation;
+  bool isTapped = false;
 
   @override
   void initState() {
+    isTapped = widget.isTapped;
     controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
+    );
+
+    fadeController = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 1),
     );
 
     animation = Tween<double>(
@@ -30,8 +40,10 @@ class _RecordCtaWidgetState extends State<RecordCtaWidget>
       end: 40 + Random().nextDouble() * 20,
     ).animate(CurvedAnimation(parent: controller, curve: Curves.ease));
 
-    controller.forward();
-    controller.repeat();
+    fadeAnimation = Tween<double>(
+      begin: 0.5,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: fadeController, curve: Curves.ease));
 
     super.initState();
   }
@@ -39,6 +51,7 @@ class _RecordCtaWidgetState extends State<RecordCtaWidget>
   @override
   void dispose() {
     controller.dispose();
+    fadeController.dispose();
     super.dispose();
   }
 
@@ -47,25 +60,72 @@ class _RecordCtaWidgetState extends State<RecordCtaWidget>
     return Hero(
       tag: "record_cta",
       child: GestureDetector(
-        onTap: widget.callback,
+        onTap: () {
+          widget.callback?.call();
 
-        child: CircleAvatar(
-          backgroundColor: ColorConsts.buttonSecondaryColor,
-          radius: 50,
-          child: CircleAvatar(
-            backgroundColor: ColorConsts.buttonSecondaryStrokeColor,
-            radius: 40,
-            child: CircleAvatar(
-              backgroundColor: ColorConsts.buttonPLinearColor1,
-              radius: 30,
-              child: AnimatedBuilder(
-                animation: animation,
-                builder: (context, child) {
-                  return Icon(Icons.mic, size: animation.value);
-                },
+          if (!isTapped) {
+            print("called 1");
+            controller.forward();
+            controller.repeat();
+
+            fadeController.forward();
+            fadeController.repeat();
+            isTapped = !isTapped;
+          } else {
+            print("called 2");
+            controller.stop();
+            fadeController.stop();
+            isTapped = !isTapped;
+          }
+        },
+
+        child: AnimatedBuilder(
+          animation: animation,
+          builder: (context, child) {
+            return SizedBox(
+              width: 140,
+              height: 140,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  // Outer animated circle
+                  AnimatedContainer(
+                    duration: Duration(milliseconds: 500),
+                    width: (animation.value + 8) * 2,
+                    height: (animation.value + 8) * 2,
+                    decoration: BoxDecoration(
+                      // shape: BoxShape.circle,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(animation.value + 16),
+                      ),
+                      color: ColorConsts.buttonSecondaryColor,
+                    ),
+                  ),
+
+                  // Middle animated circle
+                  AnimatedContainer(
+                    duration: Duration(milliseconds: 500),
+                    width: (animation.value - 5) * 2,
+                    height: (animation.value - 5) * 2,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: ColorConsts.buttonSecondaryStrokeColor,
+                    ),
+                  ),
+
+                  // Fixed center
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundColor: ColorConsts.buttonPLinearColor1,
+                    child: FadeTransition(
+                      opacity: fadeAnimation,
+                      child: Icon(Icons.mic, size: 30),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ),
+            );
+          },
         ),
       ),
     );
