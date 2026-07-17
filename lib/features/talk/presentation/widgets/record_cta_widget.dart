@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:offline_ai_tutor/core/utils/constants/color_consts.dart';
 
@@ -83,8 +82,8 @@ class _RecordCtaWidgetState extends State<RecordCtaWidget>
           animation: animation,
           builder: (context, child) {
             return SizedBox(
-              width: 140,
-              height: 140,
+              width: 125,
+              height: 125,
               child: Stack(
                 alignment: Alignment.center,
                 children: [
@@ -119,7 +118,7 @@ class _RecordCtaWidgetState extends State<RecordCtaWidget>
                     backgroundColor: ColorConsts.buttonPLinearColor1,
                     child: FadeTransition(
                       opacity: fadeAnimation,
-                      child: Icon(Icons.mic, size: 30),
+                      child: const Icon(Icons.mic, size: 30),
                     ),
                   ),
                 ],

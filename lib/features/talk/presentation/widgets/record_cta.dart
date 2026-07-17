@@ -1,9 +1,8 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:offline_ai_tutor/features/talk/presentation/cubit/recording_cubit.dart';
-import 'package:offline_ai_tutor/features/talk/presentation/cubit/recording_state.dart';
 import 'package:offline_ai_tutor/features/talk/presentation/widgets/record_cta_widget.dart';
+import 'package:offline_ai_tutor/features/talk/presentation/widgets/record_timer.dart';
 
 class RecordCta extends StatefulWidget {
   const RecordCta({super.key});
@@ -19,9 +18,11 @@ class _RecordCtaState extends State<RecordCta> {
     if (isTapped) {
       print("stopped recording");
       context.read<RecordingCubit>().stopAudioRecording();
+      context.read<RecordingCubit>().stopTimer();
     } else {
       print("started recording");
       context.read<RecordingCubit>().startAudioRecording();
+      context.read<RecordingCubit>().startTimer();
     }
     setState(() {
       isTapped = !isTapped;
@@ -34,8 +35,11 @@ class _RecordCtaState extends State<RecordCta> {
       children: [
         RecordCtaWidget(callback: tapAction),
 
-        // const SizedBox(height: 10),
+        //
         Text(isTapped ? "Tap to stop" : "Tap to start"),
+        const SizedBox(height: 10),
+
+        const RecordTimer(),
 
         // BlocSelector<RecordingCubit, RecordingState, String?>(
         //   selector: (state) {

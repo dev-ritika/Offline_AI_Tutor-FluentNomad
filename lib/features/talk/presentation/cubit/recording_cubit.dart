@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:offline_ai_tutor/features/talk/domain/use_cases/start_recording.dart';
@@ -39,4 +41,42 @@ class RecordingCubit extends Cubit<RecordingState> {
       },
     );
   }
+
+  Timer? _timer;
+  Stopwatch stopwatch = Stopwatch();
+
+  void startTimer() {
+    String seconds;
+    String minutes;
+    String hours;
+    String time;
+
+    stopwatch.start();
+
+    _timer = Timer.periodic(const Duration(seconds: 1), (tick) {
+      seconds = (stopwatch.elapsed.inSeconds % 60).toString().padLeft(2, "0");
+      minutes = (stopwatch.elapsed.inMinutes % 60).toString().padLeft(2, "0");
+      hours = (stopwatch.elapsed.inHours).toString().padLeft(2, "0");
+
+      time = "$hours : $minutes : $seconds";
+
+      emit(state.copyWith(recordingTime: time));
+    });
+  }
+
+  void stopTimer() {
+    stopwatch.stop();
+    stopwatch.reset();
+    _timer?.cancel();
+  }
+
+  @override
+  Future<void> close() async {
+    await stopRecording();
+    stopTimer();
+    return super.close();
+  }
 }
+
+//0 - 59 -> normal
+//
