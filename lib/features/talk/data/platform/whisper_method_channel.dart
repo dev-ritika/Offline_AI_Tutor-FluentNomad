@@ -1,5 +1,7 @@
 import 'package:flutter/services.dart';
+import 'package:injectable/injectable.dart';
 
+@lazySingleton
 class WhisperMethodChannel {
   static const MethodChannel _whisperChannel = MethodChannel(
     "whisper_transcribe",

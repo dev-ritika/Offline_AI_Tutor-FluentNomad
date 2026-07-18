@@ -104,12 +104,22 @@ import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/save_user_
     as _i1042;
 import 'package:offline_ai_tutor/features/onboarding/presentation/cubit/onboarding_cubit.dart'
     as _i960;
+import 'package:offline_ai_tutor/features/talk/data/data_source/load_model_data_source.dart'
+    as _i34;
 import 'package:offline_ai_tutor/features/talk/data/data_source/recording_data_source.dart'
     as _i409;
+import 'package:offline_ai_tutor/features/talk/data/platform/whisper_method_channel.dart'
+    as _i880;
+import 'package:offline_ai_tutor/features/talk/data/repositories/load_whisper_model_repo_impl.dart'
+    as _i619;
 import 'package:offline_ai_tutor/features/talk/data/repositories/recording_repo_impl.dart'
     as _i927;
+import 'package:offline_ai_tutor/features/talk/domain/repositories/load_whisper_model_repository.dart'
+    as _i684;
 import 'package:offline_ai_tutor/features/talk/domain/repositories/recording_repository.dart'
     as _i834;
+import 'package:offline_ai_tutor/features/talk/domain/use_cases/load_whisper_model.dart'
+    as _i949;
 import 'package:offline_ai_tutor/features/talk/domain/use_cases/start_recording.dart'
     as _i861;
 import 'package:offline_ai_tutor/features/talk/domain/use_cases/stop_recording.dart'
@@ -142,7 +152,15 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i536.DioClient>(() => _i536.DioClient());
     gh.lazySingleton<_i998.DownloaderClient>(() => _i998.DownloaderClient());
     gh.lazySingleton<_i718.LanguagesParser>(() => _i718.LanguagesParser());
+    gh.lazySingleton<_i880.WhisperMethodChannel>(
+      () => _i880.WhisperMethodChannel(),
+    );
     gh.lazySingleton<_i314.HiveInitializer>(() => _i314.HiveInitializerImpl());
+    gh.lazySingleton<_i34.LoadModelDataSource>(
+      () => _i34.LoadModelDataSourceImpl(
+        whisperMethodChannel: gh<_i880.WhisperMethodChannel>(),
+      ),
+    );
     gh.lazySingleton<_i738.Box<List<dynamic>>>(
       () => hiveBoxesModule.getModelsInstallBox,
       instanceName: 'modelsInstall',
@@ -187,6 +205,11 @@ extension GetItInjectableX on _i174.GetIt {
         userPrefBox: gh<_i170.Box<_i666.UserDataModel>>(
           instanceName: 'userPrefs',
         ),
+      ),
+    );
+    gh.lazySingleton<_i684.LoadWhisperModelRepository>(
+      () => _i619.LoadWhisperModelRepoImpl(
+        loadModelDataSource: gh<_i34.LoadModelDataSource>(),
       ),
     );
     gh.lazySingleton<_i87.GetHomeDataSource>(
@@ -234,6 +257,11 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i463.SaveUserDataLocallyDataSource>(
       () => _i463.SaveUserDataLocallyDataSourceImpl(
         gh<_i1055.Box<_i666.UserDataModel>>(instanceName: 'userPrefs'),
+      ),
+    );
+    gh.lazySingleton<_i949.LoadWhisperModel>(
+      () => _i949.LoadWhisperModel(
+        loadWhisperModelRepository: gh<_i684.LoadWhisperModelRepository>(),
       ),
     );
     gh.lazySingleton<_i255.SaveModelInstallStatusrepository>(
@@ -299,12 +327,6 @@ extension GetItInjectableX on _i174.GetIt {
         getUserDataSource: gh<_i861.GetUserDataSource>(),
       ),
     );
-    gh.factory<_i3.RecordingCubit>(
-      () => _i3.RecordingCubit(
-        startRecording: gh<_i861.StartRecording>(),
-        stopRecording: gh<_i211.StopRecording>(),
-      ),
-    );
     gh.lazySingleton<_i247.SaveModelInstallStatus>(
       () => _i247.SaveModelInstallStatus(
         saveUserDataRepository: gh<_i255.SaveModelInstallStatusrepository>(),
@@ -328,6 +350,13 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i546.GetModelInstallStatusRepository>(
       () => _i862.GetModelInstallStatusRepoImpl(
         getModelInstallStatusSource: gh<_i1028.GetModelInstallStatusSource>(),
+      ),
+    );
+    gh.factory<_i3.RecordingCubit>(
+      () => _i3.RecordingCubit(
+        loadWhisperModel: gh<_i949.LoadWhisperModel>(),
+        startRecording: gh<_i861.StartRecording>(),
+        stopRecording: gh<_i211.StopRecording>(),
       ),
     );
     gh.lazySingleton<_i196.GetModelInstallStatus>(

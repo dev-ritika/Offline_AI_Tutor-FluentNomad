@@ -2,17 +2,24 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:offline_ai_tutor/features/talk/domain/use_cases/load_whisper_model.dart';
 import 'package:offline_ai_tutor/features/talk/domain/use_cases/start_recording.dart';
 import 'package:offline_ai_tutor/features/talk/domain/use_cases/stop_recording.dart';
 import 'package:offline_ai_tutor/features/talk/presentation/cubit/recording_state.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 
 @injectable
 class RecordingCubit extends Cubit<RecordingState> {
   final StartRecording startRecording;
   final StopRecording stopRecording;
+  final LoadWhisperModel loadWhisperModel;
 
-  RecordingCubit({required this.startRecording, required this.stopRecording})
-    : super(const RecordingState());
+  RecordingCubit({
+    required this.loadWhisperModel,
+    required this.startRecording,
+    required this.stopRecording,
+  }) : super(const RecordingState());
 
   Future<void> startAudioRecording() async {
     emit(state.copyWith(isRecording: true));
@@ -68,6 +75,18 @@ class RecordingCubit extends Cubit<RecordingState> {
     stopwatch.stop();
     stopwatch.reset();
     _timer?.cancel();
+  }
+
+  Future<void> loadWhisperModelCall() async {
+    final path = await getModelPath("ggml-base.bin");
+
+    await loadWhisperModel(path);
+  }
+
+  Future<String> getModelPath(String fileName) async {
+    final dir = await getApplicationDocumentsDirectory();
+
+    return p.join(dir.path, "models", fileName);
   }
 
   @override

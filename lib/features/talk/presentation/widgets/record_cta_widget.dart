@@ -89,7 +89,7 @@ class _RecordCtaWidgetState extends State<RecordCtaWidget>
                 children: [
                   // Outer animated circle
                   AnimatedContainer(
-                    duration: Duration(milliseconds: 500),
+                    duration: const Duration(milliseconds: 500),
                     width: (animation.value + 8) * 2,
                     height: (animation.value + 8) * 2,
                     decoration: BoxDecoration(
