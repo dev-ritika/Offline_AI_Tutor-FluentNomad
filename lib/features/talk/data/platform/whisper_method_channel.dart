@@ -16,6 +16,12 @@ class WhisperMethodChannel {
     print("Loaded = $loaded");
   }
 
+  Future<String?> convertAudio(String audioPath) async {
+    return await _whisperChannel.invokeMethod<String>("convertAudio", {
+      "path": audioPath,
+    });
+  }
+
   Future<String> transcribe(String audioPath) async {
     final String text = await _whisperChannel.invokeMethod("transcribe", {
       "audioPath": audioPath,

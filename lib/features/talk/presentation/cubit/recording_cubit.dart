@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:offline_ai_tutor/core/dependency_injection/dependency_injection.dart';
+import 'package:offline_ai_tutor/features/talk/data/platform/whisper_method_channel.dart';
 import 'package:offline_ai_tutor/features/talk/domain/use_cases/load_whisper_model.dart';
 import 'package:offline_ai_tutor/features/talk/domain/use_cases/start_recording.dart';
 import 'package:offline_ai_tutor/features/talk/domain/use_cases/stop_recording.dart';
@@ -43,8 +45,10 @@ class RecordingCubit extends Cubit<RecordingState> {
       (l) {
         emit(state.copyWith(isRecording: false, failure: l));
       },
-      (r) {
+      (r) async {
         emit(state.copyWith(isRecording: false, audioPath: r));
+        final x = await sl<WhisperMethodChannel>().convertAudio(r ?? "");
+        print("what is x $x");
       },
     );
   }

@@ -18,7 +18,6 @@ class WhisperPlugin: NSObject {
                 let args = call.arguments as? [String: Any],
                 let path = args["path"] as? String
             else {
-
                 result(
                     FlutterError(
                         code: "INVALID_ARGUMENTS",
@@ -29,22 +28,8 @@ class WhisperPlugin: NSObject {
                 return
             }
 
-            do {
-
-                try whisperService.loadModel(at: path)
-
-                result(true)
-
-            } catch {
-
-                result(
-                    FlutterError(
-                        code: "LOAD_FAILED",
-                        message: error.localizedDescription,
-                        details: nil
-                    )
-                )
-            }
+            let success = whisperService.loadModel(at: path)
+            result(success)
 
         case "transcribe":
 
@@ -65,6 +50,26 @@ class WhisperPlugin: NSObject {
     let text = whisperService.transcribe(audioPath: audioPath)
 
     result(text)
+
+    case "convertAudio":
+
+    guard
+        let args = call.arguments as? [String: Any],
+        let path = args["path"] as? String
+    else {
+        result(
+            FlutterError(
+                code: "INVALID_ARGUMENTS",
+                message: "Missing audio path",
+                details: nil
+            )
+        )
+        return
+    }
+
+    let wavPath = whisperService.convertAudio(at: path)
+
+    result(wavPath)
         
         case "getTranscriptedText":
 

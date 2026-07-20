@@ -4,7 +4,35 @@ final class WhisperService {
 
     private let bridge = WhisperBridge()
 
+    private let audioConverter = AudioConverter()
+
     private(set) var isModelLoaded = false
+
+    func convertAudio(at audioPath: String) -> String? {
+
+    do {
+
+    print("Calling converter...")
+
+    let wavPath = try audioConverter.convertToWav(from: audioPath)
+
+    print("Returned from converter")
+    print(wavPath)
+
+    return wavPath
+
+} catch let error as NSError {
+
+    print("Converter threw")
+    print("Domain:", error.domain)
+    print("Code:", error.code)
+    print("Description:", error.localizedDescription)
+    print(error.userInfo)
+
+    return nil
+
+}
+}
 
     @discardableResult
     func loadModel(at modelPath: String) -> Bool {
