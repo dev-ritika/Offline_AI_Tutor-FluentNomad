@@ -33,6 +33,8 @@ class WhisperPlugin: NSObject {
 
         case "transcribe":
 
+         print("🔥 Swift received transcribe call")
+
     guard
         let args = call.arguments as? [String: Any],
         let audioPath = args["audioPath"] as? String

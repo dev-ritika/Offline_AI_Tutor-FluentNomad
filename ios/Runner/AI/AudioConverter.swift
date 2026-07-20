@@ -49,19 +49,19 @@ final class AudioConverter {
                 forReading: inputURL
             )
         } catch {
-            print("AVAudioFile read failed:", error)
+           // print("AVAudioFile read failed:", error)
             throw error
         }
 
 
         let inputFormat = inputFile.processingFormat
 
-        print("""
-        Input format:
-        Sample Rate: \(inputFormat.sampleRate)
-        Channels: \(inputFormat.channelCount)
-        Format: \(inputFormat)
-        """)
+        // print("""
+        // Input format:
+        // Sample Rate: \(inputFormat.sampleRate)
+        // Channels: \(inputFormat.channelCount)
+        // Format: \(inputFormat)
+        // """)
 
 
         guard let outputFormat = AVAudioFormat(
@@ -101,7 +101,7 @@ let settings: [String: Any] = [
     interleaved: true
 )
         } catch {
-            print("Output file creation failed:", error)
+          //  print("Output file creation failed:", error)
             throw error
         }
 
@@ -181,12 +181,6 @@ let status = converter.convert(
 }
 
 
-
-print("Convert status:", status)
-print("Converted frames:", outputBuffer.frameLength)
-
-
-
 guard outputBuffer.frameLength > 0 else {
     throw NSError(
         domain: "AudioConverter",
@@ -198,43 +192,43 @@ guard outputBuffer.frameLength > 0 else {
     )
 }
 
-print(outputBuffer.frameCapacity)
-print(outputBuffer.frameLength)
+// print(outputBuffer.frameCapacity)
+// print(outputBuffer.frameLength)
 
-print("==========")
+// print("==========")
 
-print(outputBuffer.frameLength)
-print(outputBuffer.frameCapacity)
+// print(outputBuffer.frameLength)
+// print(outputBuffer.frameCapacity)
 
-print(outputBuffer.format)
+// print(outputBuffer.format)
 
-print(outputFile.processingFormat)
+// print(outputFile.processingFormat)
 
-print(outputFile.fileFormat)
+// print(outputFile.fileFormat)
 
-print(outputBuffer.audioBufferList.pointee.mNumberBuffers)
+// print(outputBuffer.audioBufferList.pointee.mNumberBuffers)
 
 let audioBuffer = outputBuffer.audioBufferList.pointee.mBuffers
 
-print(audioBuffer.mData as Any)
-print(audioBuffer.mDataByteSize)
-print(audioBuffer.mNumberChannels)
+// print(audioBuffer.mData as Any)
+// print(audioBuffer.mDataByteSize)
+// print(audioBuffer.mNumberChannels)
 
-print("==========")
+// print("==========")
 
 try outputFile.write(
     from: outputBuffer
 )
 
 
-        print("WAV created:", outputURL.path)
+//         print("WAV created:", outputURL.path)
 
-        print("""
-Output format:
-Sample Rate: \(outputFormat.sampleRate)
-Channels: \(outputFormat.channelCount)
-Frames: \(outputBuffer.frameLength)
-""")
+//         print("""
+// Output format:
+// Sample Rate: \(outputFormat.sampleRate)
+// Channels: \(outputFormat.channelCount)
+// Frames: \(outputBuffer.frameLength)
+// """)
 
         return outputURL.path
     }

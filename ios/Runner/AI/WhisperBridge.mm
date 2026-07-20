@@ -47,7 +47,96 @@
 
     NSLog(@"Audio Path: %@", audioPath);
 
-    return @"Hello from Whisper";
+    NSURL *url = [NSURL fileURLWithPath:audioPath];
+
+    NSError *error = nil;
+
+    AVAudioFile *audioFile =
+    [[AVAudioFile alloc] initForReading:url error:&error];
+
+    if (error) {
+        NSLog(@"Error opening wav: %@", error);
+        return @"Unable to open WAV";
+    }
+
+    AVAudioFormat *format = audioFile.processingFormat;
+
+    NSLog(@"=======================");
+    NSLog(@"Sample Rate: %f", format.sampleRate);
+    NSLog(@"Channels: %u", format.channelCount);
+    NSLog(@"Frame Length: %lld", audioFile.length);
+    NSLog(@"=======================");
+
+    // -----------------------------
+    // STEP 2 : Read the WAV into memory
+    // -----------------------------
+
+    AVAudioPCMBuffer *buffer =
+    [[AVAudioPCMBuffer alloc]
+        initWithPCMFormat:format
+        frameCapacity:(AVAudioFrameCount)audioFile.length];
+
+    [audioFile readIntoBuffer:buffer error:&error];
+
+    if (error) {
+        NSLog(@"Error reading buffer: %@", error);
+        return @"Unable to read audio buffer";
+    }
+
+    // -----------------------------
+    // STEP 3 : Verify the samples
+    // -----------------------------
+
+    NSLog(@"Buffer Frame Length: %u", buffer.frameLength);
+
+    float *samples = buffer.floatChannelData[0];
+
+    struct whisper_full_params params =
+    whisper_full_default_params(WHISPER_SAMPLING_GREEDY);
+
+    params.print_progress = false;
+params.print_realtime = false;
+params.print_timestamps = false;
+
+///TODO
+params.translate = false;
+params.language = "en";
+params.n_threads = 4;
+
+int result = whisper_full(
+    _context,
+    params,
+    samples,
+    buffer.frameLength
+);
+
+if (result != 0) {
+    NSLog(@"Whisper failed");
+    return @"Transcription failed";
+}
+
+int segmentCount = whisper_full_n_segments(_context);
+
+NSLog(@"Segments: %d", segmentCount);
+
+    NSLog(@"First Sample: %f", samples[0]);
+
+    NSMutableString *transcript = [NSMutableString string];
+
+for (int i = 0; i < segmentCount; i++) {
+
+    const char *text = whisper_full_get_segment_text(
+        _context,
+        i
+    );
+
+    NSLog(@"Segment %d: %s", i, text);
+
+    [transcript appendString:
+        [NSString stringWithUTF8String:text]];
+}
+
+    return transcript;
 }
 
 @end

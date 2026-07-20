@@ -48,7 +48,11 @@ class RecordingCubit extends Cubit<RecordingState> {
       (r) async {
         emit(state.copyWith(isRecording: false, audioPath: r));
         final x = await sl<WhisperMethodChannel>().convertAudio(r ?? "");
+
+        final text = await sl<WhisperMethodChannel>().transcribe(x ?? "");
+
         print("what is x $x");
+        print("what is texttt $text");
       },
     );
   }

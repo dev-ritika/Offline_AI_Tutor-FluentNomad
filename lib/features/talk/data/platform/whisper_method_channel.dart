@@ -27,6 +27,8 @@ class WhisperMethodChannel {
       "audioPath": audioPath,
     });
 
+    print("called transcribe $text");
+
     return text;
   }
 }
