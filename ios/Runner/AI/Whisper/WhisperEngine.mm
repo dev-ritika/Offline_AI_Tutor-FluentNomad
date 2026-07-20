@@ -1,9 +1,12 @@
-#import "WhisperBridge.h"
+#import "WhisperEngine.h"
+
 #import <whisper/whisper.h>
 #import <AVFoundation/AVFoundation.h>
 
-@implementation WhisperBridge {
+@implementation WhisperEngine {
+
     struct whisper_context *_context;
+
 }
 
 - (BOOL)loadModel:(NSString *)modelPath
