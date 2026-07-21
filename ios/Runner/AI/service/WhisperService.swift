@@ -60,12 +60,47 @@ final class WhisperService {
         isModelLoaded = false
     }
 
-    func transcribe(audioPath: String) -> String {
+private func transcribeSync(audioPath: String) throws -> String {
 
     guard isModelLoaded else {
-        return "Model not loaded"
+        throw WhisperError.modelNotLoaded
     }
 
-    return bridge.transcribe(audioPath)
+    let text = try bridge.transcribe(audioPath)
+
+    return text
 }
+
+func transcribe(
+    audioPath: String,
+    completion: @escaping (Result<String, Error>) -> Void
+) {
+
+    DispatchQueue.global(qos: .userInitiated).async {
+
+    do {
+
+        let text = try self.transcribeSync(
+            audioPath: audioPath
+        )
+
+        DispatchQueue.main.async {
+
+            completion(.success(text))
+
+        }
+
+    } catch {
+
+        DispatchQueue.main.async {
+
+            completion(.failure(error))
+
+        }
+
+    }
+
+}
+}
+
 }

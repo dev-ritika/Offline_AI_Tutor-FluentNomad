@@ -83,25 +83,36 @@
     }
 }
 
-- (NSString *)transcribe:(NSString *)audioPath {
+- (NSString *)transcribe:(NSString *)audioPath
+                   error:(NSError **)error {
 
     if (_context == nullptr) {
 
-    return @"Model not loaded";
+    if (error) {
 
+        *error = [NSError errorWithDomain:@"WhisperEngine"
+                                     code:1001
+                                 userInfo:@{
+            NSLocalizedDescriptionKey : @"Model not loaded"
+        }];
+
+    }
+
+    return nil;
 }
 
     NSLog(@"Audio Path: %@", audioPath);
 
-NSError *error = nil;
+NSError *readError = nil;
 
 AudioData *audio =
     [_audioReader readAudio:audioPath
-                      error:&error];
+                      error:&readError];
 
-if (error) {
-    NSLog(@"%@", error);
-    return @"Unable to read audio";
+if (error && *error != nil) {
+
+    return nil;
+
 }
     
     struct whisper_full_params params =
@@ -124,8 +135,20 @@ int result = whisper_full(
 );
 
 if (result != 0) {
-    NSLog(@"Whisper failed");
-    return @"Transcription failed";
+
+    if (error) {
+
+        *error =
+        [NSError errorWithDomain:@"WhisperEngine"
+                            code:1002
+                        userInfo:@{
+            NSLocalizedDescriptionKey :
+            @"Whisper transcription failed"
+        }];
+
+    }
+
+    return nil;
 }
 
 int segmentCount = whisper_full_n_segments(_context);

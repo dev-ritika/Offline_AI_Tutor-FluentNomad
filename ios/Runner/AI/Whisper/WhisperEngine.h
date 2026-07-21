@@ -10,7 +10,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)releaseModel;
 
-- (NSString *)transcribe:(NSString *)audioPath;
+- (nullable NSString *)transcribe:(NSString *)audioPath
+                            error:(NSError **)error;
 
 @end
 

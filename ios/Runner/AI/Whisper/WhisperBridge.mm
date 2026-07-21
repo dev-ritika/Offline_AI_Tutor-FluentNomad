@@ -36,10 +36,10 @@
 
 }
 
-- (NSString *)transcribe:(NSString *)audioPath {
-
-    return [engine transcribe:audioPath];
-
+- (nullable NSString *)transcribe:(NSString *)audioPath
+                            error:(NSError **)error {
+    return [engine transcribe:audioPath
+                        error:error];
 }
 
 @end

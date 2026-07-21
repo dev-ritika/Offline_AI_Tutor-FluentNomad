@@ -13,52 +13,61 @@ class WhisperPlugin: NSObject {
         switch call.method {
 
         case "loadModel":
-
-            guard
-                let args = call.arguments as? [String: Any],
-                let path = args["path"] as? String
-            else {
-                result(
-                    FlutterError(
-                        code: "INVALID_ARGUMENTS",
-                        message: "Missing model path",
-                        details: nil
-                    )
-                )
-                return
-            }
-
-            let success = whisperService.loadModel(at: path)
-            result(success)
+            handleLoadModel(call, result: result)
 
         case "transcribe":
+            handleTranscribe(call, result: result)
 
-         print("🔥 Swift received transcribe call")
+        case "convertAudio":
+            handleConvertAudio(call, result: result)
 
-    guard
-        let args = call.arguments as? [String: Any],
-        let audioPath = args["audioPath"] as? String
-    else {
-        result(
-            FlutterError(
-                code: "INVALID_ARGUMENTS",
-                message: "Missing audio path",
-                details: nil
-            )
-        )
-        return
+        case "isModelLoaded":
+            result(whisperService.isModelLoaded)
+
+        default:
+            result(FlutterMethodNotImplemented)
     }
 
-    let text = whisperService.transcribe(audioPath: audioPath)
+    }
 
-    result(text)
-
-    case "convertAudio":
+    private func handleLoadModel(
+    _ call: FlutterMethodCall,
+    result: @escaping FlutterResult
+) {
 
     guard
         let args = call.arguments as? [String: Any],
         let path = args["path"] as? String
     else {
+
+        result(
+            FlutterError(
+                code: "INVALID_ARGUMENTS",
+                message: "Missing model path",
+                details: nil
+            )
+        )
+
+        return
+    }
+
+    let success = whisperService.loadModel(at: path)
+
+    result(success)
+}
+
+private func handleTranscribe(
+    _ call: FlutterMethodCall,
+    result: @escaping FlutterResult
+) {
+
+    print("🔥 Swift received transcribe call")
+
+    guard
+        let args = call.arguments as? [String: Any],
+        let audioPath = args["audioPath"] as? String
+    else {
+
         result(
             FlutterError(
                 code: "INVALID_ARGUMENTS",
@@ -66,23 +75,55 @@ class WhisperPlugin: NSObject {
                 details: nil
             )
         )
+
+        return
+    }
+
+    whisperService.transcribe(audioPath: audioPath) { response in
+
+    switch response {
+
+    case .success(let text):
+
+        result(text)
+
+    case .failure(let error):
+
+        result(
+            FlutterError(
+                code: "TRANSCRIPTION_ERROR",
+                message: error.localizedDescription,
+                details: nil
+            )
+        )
+    }
+}
+}
+
+private func handleConvertAudio(
+    _ call: FlutterMethodCall,
+    result: @escaping FlutterResult
+) {
+
+    guard
+        let args = call.arguments as? [String: Any],
+        let path = args["path"] as? String
+    else {
+
+        result(
+            FlutterError(
+                code: "INVALID_ARGUMENTS",
+                message: "Missing audio path",
+                details: nil
+            )
+        )
+
         return
     }
 
     let wavPath = whisperService.convertAudio(at: path)
 
     result(wavPath)
-        
-        case "getTranscriptedText":
+}
 
-            result(FlutterMethodNotImplemented)
-
-        case "isModelLoaded":
-             result(whisperService.isModelLoaded)
-
-        default:
-
-            result(FlutterMethodNotImplemented)
-        }
-    }
 }
