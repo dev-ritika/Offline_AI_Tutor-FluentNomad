@@ -1,52 +1,38 @@
 #import "AudioReader.h"
+#import "AudioData.h"
+
 #import <AVFoundation/AVFoundation.h>
 
 @implementation AudioReader
 
-- (NSArray<NSNumber *> *)readSamples:(NSString *)audioPath {
-NSURL *url = [NSURL fileURLWithPath:audioPath];
+- (AudioData *)readAudio:(NSString *)audioPath
+                   error:(NSError **)error {
 
-    NSError *error = nil;
+    NSURL *url = [NSURL fileURLWithPath:audioPath];
 
     AVAudioFile *audioFile =
-    [[AVAudioFile alloc] initForReading:url error:&error];
+        [[AVAudioFile alloc] initForReading:url
+                                      error:error];
 
-    if (error) {
-        NSLog(@"Error opening wav: %@", error);
-        return @"Unable to open WAV";
+    if (*error) {
+        return nil;
     }
 
     AVAudioFormat *format = audioFile.processingFormat;
 
-    NSLog(@"=======================");
-    NSLog(@"Sample Rate: %f", format.sampleRate);
-    NSLog(@"Channels: %u", format.channelCount);
-    NSLog(@"Frame Length: %lld", audioFile.length);
-    NSLog(@"=======================");
-
-    // -----------------------------
-    // STEP 2 : Read the WAV into memory
-    // -----------------------------
-
     AVAudioPCMBuffer *buffer =
-    [[AVAudioPCMBuffer alloc]
-        initWithPCMFormat:format
-        frameCapacity:(AVAudioFrameCount)audioFile.length];
+        [[AVAudioPCMBuffer alloc]
+            initWithPCMFormat:format
+                frameCapacity:(AVAudioFrameCount)audioFile.length];
 
-    [audioFile readIntoBuffer:buffer error:&error];
+    [audioFile readIntoBuffer:buffer
+                        error:error];
 
-    if (error) {
-        NSLog(@"Error reading buffer: %@", error);
-        return @"Unable to read audio buffer";
+    if (*error) {
+        return nil;
     }
 
-    // -----------------------------
-    // STEP 3 : Verify the samples
-    // -----------------------------
-
-    NSLog(@"Buffer Frame Length: %u", buffer.frameLength);
-
-    float *samples = buffer.floatChannelData[0];
+    return [[AudioData alloc] initWithBuffer:buffer];
 }
 
 @end

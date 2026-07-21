@@ -1,5 +1,6 @@
 #import "WhisperEngine.h"
-
+#import "AudioReader.h"
+#import "AudioData.h"
 #import <whisper/whisper.h>
 #import <AVFoundation/AVFoundation.h>
 
@@ -7,21 +8,57 @@
 
     struct whisper_context *_context;
 
+    AudioReader *_audioReader;
+
 }
 
-- (BOOL)loadModel:(NSString *)modelPath
-             {
+- (instancetype)init {
+
+    self = [super init];
+
+    if (self) {
+
+        _audioReader = [[AudioReader alloc] init];
+
+    }
+
+    return self;
+}
+
+- (void)dealloc {
+
+    if (_context != nullptr) {
+
+        whisper_free(_context);
+        _context = nullptr;
+
+    }
+
+}
+
+- (BOOL)loadModel:(NSString *)modelPath {
+
+    if (_context != nullptr) {
+
+        whisper_free(_context);
+        _context = nullptr;
+
+    }
 
     NSLog(@"Loading model...");
 
-    struct whisper_context_params params = whisper_context_default_params();
+    struct whisper_context_params params =
+        whisper_context_default_params();
 
     const char *path = [modelPath UTF8String];
 
-    _context = whisper_init_from_file_with_params(path, params);
+    _context =
+        whisper_init_from_file_with_params(path, params);
 
     if (_context == nullptr) {
+
         NSLog(@"Failed to load model");
+
         return NO;
     }
 
@@ -48,52 +85,25 @@
 
 - (NSString *)transcribe:(NSString *)audioPath {
 
+    if (_context == nullptr) {
+
+    return @"Model not loaded";
+
+}
+
     NSLog(@"Audio Path: %@", audioPath);
 
-    NSURL *url = [NSURL fileURLWithPath:audioPath];
+NSError *error = nil;
 
-    NSError *error = nil;
+AudioData *audio =
+    [_audioReader readAudio:audioPath
+                      error:&error];
 
-    AVAudioFile *audioFile =
-    [[AVAudioFile alloc] initForReading:url error:&error];
-
-    if (error) {
-        NSLog(@"Error opening wav: %@", error);
-        return @"Unable to open WAV";
-    }
-
-    AVAudioFormat *format = audioFile.processingFormat;
-
-    NSLog(@"=======================");
-    NSLog(@"Sample Rate: %f", format.sampleRate);
-    NSLog(@"Channels: %u", format.channelCount);
-    NSLog(@"Frame Length: %lld", audioFile.length);
-    NSLog(@"=======================");
-
-    // -----------------------------
-    // STEP 2 : Read the WAV into memory
-    // -----------------------------
-
-    AVAudioPCMBuffer *buffer =
-    [[AVAudioPCMBuffer alloc]
-        initWithPCMFormat:format
-        frameCapacity:(AVAudioFrameCount)audioFile.length];
-
-    [audioFile readIntoBuffer:buffer error:&error];
-
-    if (error) {
-        NSLog(@"Error reading buffer: %@", error);
-        return @"Unable to read audio buffer";
-    }
-
-    // -----------------------------
-    // STEP 3 : Verify the samples
-    // -----------------------------
-
-    NSLog(@"Buffer Frame Length: %u", buffer.frameLength);
-
-    float *samples = buffer.floatChannelData[0];
-
+if (error) {
+    NSLog(@"%@", error);
+    return @"Unable to read audio";
+}
+    
     struct whisper_full_params params =
     whisper_full_default_params(WHISPER_SAMPLING_GREEDY);
 
@@ -109,8 +119,8 @@ params.n_threads = 4;
 int result = whisper_full(
     _context,
     params,
-    samples,
-    buffer.frameLength
+    audio.samples,
+    audio.sampleCount
 );
 
 if (result != 0) {
@@ -122,7 +132,7 @@ int segmentCount = whisper_full_n_segments(_context);
 
 NSLog(@"Segments: %d", segmentCount);
 
-    NSLog(@"First Sample: %f", samples[0]);
+    NSLog(@"First Sample: %f", audio.samples[0]);
 
     NSMutableString *transcript = [NSMutableString string];
 
