@@ -8,6 +8,19 @@ final class WhisperService {
 
     private(set) var isModelLoaded = false
 
+    var progressHandler: ((Int) -> Void)? {
+
+    didSet {
+
+        bridge.progressHandler = { progress in
+            self.progressHandler?(Int(progress))
+        }
+
+    }
+
+
+}
+
     func convertAudio(at audioPath: String) -> String? {
 
     do {

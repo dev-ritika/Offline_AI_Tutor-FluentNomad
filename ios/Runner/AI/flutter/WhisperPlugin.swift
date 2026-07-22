@@ -61,6 +61,7 @@ private func handleTranscribe(
     result: @escaping FlutterResult
 ) {
 
+
     print("🔥 Swift received transcribe call")
 
     guard
@@ -78,6 +79,13 @@ private func handleTranscribe(
 
         return
     }
+
+
+    whisperService.progressHandler = { progress in
+
+    print("Progress: \(progress)%")
+
+}
 
     whisperService.transcribe(audioPath: audioPath) { response in
 

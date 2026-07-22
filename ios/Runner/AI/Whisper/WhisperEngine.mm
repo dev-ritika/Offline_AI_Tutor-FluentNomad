@@ -4,6 +4,22 @@
 #import <whisper/whisper.h>
 #import <AVFoundation/AVFoundation.h>
 
+static void whisperProgressCallback(
+    struct whisper_context * ctx,
+    struct whisper_state * state,
+    int progress,
+    void * user_data
+) {
+
+    WhisperEngine *engine =
+    (__bridge WhisperEngine *)user_data;
+
+    if (engine.progressHandler) {
+    engine.progressHandler(progress);
+}
+
+}
+
 @implementation WhisperEngine {
 
     struct whisper_context *_context;
@@ -126,6 +142,9 @@ params.print_timestamps = false;
 params.translate = false;
 params.language = "en";
 params.n_threads = 4;
+params.progress_callback = whisperProgressCallback;
+params.progress_callback_user_data = (__bridge void *)self;
+
 
 int result = whisper_full(
     _context,
@@ -172,7 +191,9 @@ for (int i = 0; i < segmentCount; i++) {
         [NSString stringWithUTF8String:text]];
 }
 
+
     return transcript;
+
 }
 
 @end

@@ -4,6 +4,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface WhisperEngine : NSObject
 
+@property (nonatomic, copy, nullable)
+void (^progressHandler)(int progress);
+
 - (BOOL)loadModel:(NSString *)modelPath;
 
 - (BOOL)isLoaded;

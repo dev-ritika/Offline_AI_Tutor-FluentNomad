@@ -18,6 +18,16 @@
     return self;
 }
 
+- (void)setProgressHandler:(void (^)(int))progressHandler {
+
+    engine.progressHandler = progressHandler;
+}
+
+- (void (^)(int))progressHandler {
+
+    return engine.progressHandler;
+}
+
 - (BOOL)loadModel:(NSString *)modelPath {
 
     return [engine loadModel:modelPath];
@@ -41,5 +51,6 @@
     return [engine transcribe:audioPath
                         error:error];
 }
+
 
 @end
