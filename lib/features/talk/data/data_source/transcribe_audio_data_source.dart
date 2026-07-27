@@ -5,6 +5,8 @@ abstract interface class TranscribeAudioDataSource {
   Future<String?> convertAudio(String audioPath);
 
   Future<String> transcribeAudio(String audioPath);
+
+  Stream<int> transcriptionProgressStream();
 }
 
 @LazySingleton(as: TranscribeAudioDataSource)
@@ -21,5 +23,10 @@ class TranscribeAudioDataSourceImpl implements TranscribeAudioDataSource {
   @override
   Future<String> transcribeAudio(String audioPath) async {
     return await whisperMethodChannel.transcribe(audioPath);
+  }
+
+  @override
+  Stream<int> transcriptionProgressStream() {
+    return whisperMethodChannel.progressStream();
   }
 }

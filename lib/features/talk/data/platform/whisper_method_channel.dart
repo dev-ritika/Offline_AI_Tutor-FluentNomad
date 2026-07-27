@@ -9,7 +9,7 @@ class WhisperMethodChannel {
 
   static const EventChannel _progressChannel = EventChannel("whisper_progress");
 
-  static Stream<int> get progressStream {
+  Stream<int> progressStream() {
     return _progressChannel.receiveBroadcastStream().cast<int>();
   }
 

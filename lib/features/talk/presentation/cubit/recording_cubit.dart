@@ -1,14 +1,13 @@
 import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:offline_ai_tutor/core/dependency_injection/dependency_injection.dart';
 import 'package:offline_ai_tutor/features/talk/data/platform/whisper_method_channel.dart';
 import 'package:offline_ai_tutor/features/talk/domain/use_cases/convert_audio.dart';
 import 'package:offline_ai_tutor/features/talk/domain/use_cases/load_whisper_model.dart';
 import 'package:offline_ai_tutor/features/talk/domain/use_cases/start_recording.dart';
 import 'package:offline_ai_tutor/features/talk/domain/use_cases/stop_recording.dart';
 import 'package:offline_ai_tutor/features/talk/domain/use_cases/transcribe_audio.dart';
+import 'package:offline_ai_tutor/features/talk/domain/use_cases/transcription_progress_stream.dart';
 import 'package:offline_ai_tutor/features/talk/presentation/cubit/recording_state.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -20,6 +19,7 @@ class RecordingCubit extends Cubit<RecordingState> {
   final LoadWhisperModel loadWhisperModel;
   final TranscribeAudio transcribeAudio;
   final ConvertAudio convertAudio;
+  final TranscriptionProgressStream transcriptionProgressStream;
 
   RecordingCubit({
     required this.loadWhisperModel,
@@ -27,6 +27,7 @@ class RecordingCubit extends Cubit<RecordingState> {
     required this.stopRecording,
     required this.convertAudio,
     required this.transcribeAudio,
+    required this.transcriptionProgressStream,
   }) : super(const RecordingState());
 
   Future<void> startAudioRecording() async {
@@ -55,7 +56,7 @@ class RecordingCubit extends Cubit<RecordingState> {
         emit(state.copyWith(isRecording: false, audioPath: r));
         final convertedAudio = await convertAudio(r ?? "");
 
-        WhisperMethodChannel.progressStream.listen((progress) {
+        transcriptionProgressStream().listen((progress) {
           print("Progress: $progress%");
         });
 
@@ -114,6 +115,3 @@ class RecordingCubit extends Cubit<RecordingState> {
     return super.close();
   }
 }
-
-//0 - 59 -> normal
-//

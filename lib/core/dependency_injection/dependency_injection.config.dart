@@ -134,6 +134,8 @@ import 'package:offline_ai_tutor/features/talk/domain/use_cases/stop_recording.d
     as _i211;
 import 'package:offline_ai_tutor/features/talk/domain/use_cases/transcribe_audio.dart'
     as _i504;
+import 'package:offline_ai_tutor/features/talk/domain/use_cases/transcription_progress_stream.dart'
+    as _i180;
 import 'package:offline_ai_tutor/features/talk/presentation/cubit/recording_cubit.dart'
     as _i3;
 import 'package:offline_ai_tutor/features/user/data/data_model/user_data_model.dart'
@@ -341,6 +343,11 @@ extension GetItInjectableX on _i174.GetIt {
         transcribeAudioRepository: gh<_i670.TranscribeAudioRepository>(),
       ),
     );
+    gh.factory<_i180.TranscriptionProgressStream>(
+      () => _i180.TranscriptionProgressStream(
+        transcribeAudioRepository: gh<_i670.TranscribeAudioRepository>(),
+      ),
+    );
     gh.lazySingleton<_i649.SaveUserDataRepository>(
       () => _i974.SaveUserDataRepoImpl(
         saveUserDataLocallyDataSource:
@@ -367,6 +374,16 @@ extension GetItInjectableX on _i174.GetIt {
         installModelRepository: gh<_i550.InstallModelRepository>(),
       ),
     );
+    gh.factory<_i3.RecordingCubit>(
+      () => _i3.RecordingCubit(
+        loadWhisperModel: gh<_i949.LoadWhisperModel>(),
+        startRecording: gh<_i861.StartRecording>(),
+        stopRecording: gh<_i211.StopRecording>(),
+        convertAudio: gh<_i1000.ConvertAudio>(),
+        transcribeAudio: gh<_i504.TranscribeAudio>(),
+        transcriptionProgressStream: gh<_i180.TranscriptionProgressStream>(),
+      ),
+    );
     gh.lazySingleton<_i76.GetUserData>(
       () => _i76.GetUserData(
         getUserDataRepository: gh<_i907.GetUserDataRepository>(),
@@ -380,15 +397,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i546.GetModelInstallStatusRepository>(
       () => _i862.GetModelInstallStatusRepoImpl(
         getModelInstallStatusSource: gh<_i1028.GetModelInstallStatusSource>(),
-      ),
-    );
-    gh.factory<_i3.RecordingCubit>(
-      () => _i3.RecordingCubit(
-        loadWhisperModel: gh<_i949.LoadWhisperModel>(),
-        startRecording: gh<_i861.StartRecording>(),
-        stopRecording: gh<_i211.StopRecording>(),
-        convertAudio: gh<_i1000.ConvertAudio>(),
-        transcribeAudio: gh<_i504.TranscribeAudio>(),
       ),
     );
     gh.lazySingleton<_i196.GetModelInstallStatus>(

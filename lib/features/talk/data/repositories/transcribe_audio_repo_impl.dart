@@ -19,4 +19,9 @@ class TranscribeAudioRepositoryImpl implements TranscribeAudioRepository {
   Future<String> transcribeAudio(String audioPath) async {
     return await transcribeAudioDataSource.transcribeAudio(audioPath);
   }
+
+  @override
+  Stream<int> transcriptionProgressStream() {
+    return transcribeAudioDataSource.transcriptionProgressStream();
+  }
 }
