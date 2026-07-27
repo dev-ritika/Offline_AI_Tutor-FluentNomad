@@ -108,22 +108,32 @@ import 'package:offline_ai_tutor/features/talk/data/data_source/load_model_data_
     as _i34;
 import 'package:offline_ai_tutor/features/talk/data/data_source/recording_data_source.dart'
     as _i409;
+import 'package:offline_ai_tutor/features/talk/data/data_source/transcribe_audio_data_source.dart'
+    as _i566;
 import 'package:offline_ai_tutor/features/talk/data/platform/whisper_method_channel.dart'
     as _i880;
 import 'package:offline_ai_tutor/features/talk/data/repositories/load_whisper_model_repo_impl.dart'
     as _i619;
 import 'package:offline_ai_tutor/features/talk/data/repositories/recording_repo_impl.dart'
     as _i927;
+import 'package:offline_ai_tutor/features/talk/data/repositories/transcribe_audio_repo_impl.dart'
+    as _i989;
 import 'package:offline_ai_tutor/features/talk/domain/repositories/load_whisper_model_repository.dart'
     as _i684;
 import 'package:offline_ai_tutor/features/talk/domain/repositories/recording_repository.dart'
     as _i834;
+import 'package:offline_ai_tutor/features/talk/domain/repositories/transcribe_audio_repository.dart'
+    as _i670;
+import 'package:offline_ai_tutor/features/talk/domain/use_cases/convert_audio.dart'
+    as _i1000;
 import 'package:offline_ai_tutor/features/talk/domain/use_cases/load_whisper_model.dart'
     as _i949;
 import 'package:offline_ai_tutor/features/talk/domain/use_cases/start_recording.dart'
     as _i861;
 import 'package:offline_ai_tutor/features/talk/domain/use_cases/stop_recording.dart'
     as _i211;
+import 'package:offline_ai_tutor/features/talk/domain/use_cases/transcribe_audio.dart'
+    as _i504;
 import 'package:offline_ai_tutor/features/talk/presentation/cubit/recording_cubit.dart'
     as _i3;
 import 'package:offline_ai_tutor/features/user/data/data_model/user_data_model.dart'
@@ -156,6 +166,11 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i880.WhisperMethodChannel(),
     );
     gh.lazySingleton<_i314.HiveInitializer>(() => _i314.HiveInitializerImpl());
+    gh.lazySingleton<_i566.TranscribeAudioDataSource>(
+      () => _i566.TranscribeAudioDataSourceImpl(
+        whisperMethodChannel: gh<_i880.WhisperMethodChannel>(),
+      ),
+    );
     gh.lazySingleton<_i34.LoadModelDataSource>(
       () => _i34.LoadModelDataSourceImpl(
         whisperMethodChannel: gh<_i880.WhisperMethodChannel>(),
@@ -249,6 +264,11 @@ extension GetItInjectableX on _i174.GetIt {
         llmMModelDataSource: gh<_i132.LLMModelDataSource>(),
       ),
     );
+    gh.lazySingleton<_i670.TranscribeAudioRepository>(
+      () => _i989.TranscribeAudioRepositoryImpl(
+        transcribeAudioDataSource: gh<_i566.TranscribeAudioDataSource>(),
+      ),
+    );
     gh.lazySingleton<_i394.LanguageRepository>(
       () => _i590.LanguageRepoImpl(
         languageDataSource: gh<_i547.LanguageLocalDataSource>(),
@@ -311,6 +331,16 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i818.GetModels>(
       () => _i818.GetModels(llmModelRepository: gh<_i333.LlmModelRepository>()),
     );
+    gh.lazySingleton<_i1000.ConvertAudio>(
+      () => _i1000.ConvertAudio(
+        transcribeAudioRepository: gh<_i670.TranscribeAudioRepository>(),
+      ),
+    );
+    gh.lazySingleton<_i504.TranscribeAudio>(
+      () => _i504.TranscribeAudio(
+        transcribeAudioRepository: gh<_i670.TranscribeAudioRepository>(),
+      ),
+    );
     gh.lazySingleton<_i649.SaveUserDataRepository>(
       () => _i974.SaveUserDataRepoImpl(
         saveUserDataLocallyDataSource:
@@ -357,6 +387,8 @@ extension GetItInjectableX on _i174.GetIt {
         loadWhisperModel: gh<_i949.LoadWhisperModel>(),
         startRecording: gh<_i861.StartRecording>(),
         stopRecording: gh<_i211.StopRecording>(),
+        convertAudio: gh<_i1000.ConvertAudio>(),
+        transcribeAudio: gh<_i504.TranscribeAudio>(),
       ),
     );
     gh.lazySingleton<_i196.GetModelInstallStatus>(

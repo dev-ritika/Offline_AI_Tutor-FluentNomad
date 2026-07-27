@@ -7,6 +7,12 @@ class WhisperMethodChannel {
     "whisper_transcribe",
   );
 
+  static const EventChannel _progressChannel = EventChannel("whisper_progress");
+
+  static Stream<int> get progressStream {
+    return _progressChannel.receiveBroadcastStream().cast<int>();
+  }
+
   Future<void> loadModel(String path) async {
     await _whisperChannel.invokeMethod('loadModel', {'path': path});
 

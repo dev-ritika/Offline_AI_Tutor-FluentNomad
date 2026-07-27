@@ -5,6 +5,8 @@ class WhisperPlugin: NSObject {
 
     private let whisperService = WhisperService()
 
+    let progressStreamHandler = ProgressStreamHandler()
+
     func handle(
         _ call: FlutterMethodCall,
         result: @escaping FlutterResult
@@ -81,11 +83,11 @@ private func handleTranscribe(
     }
 
 
-    whisperService.progressHandler = { progress in
+    whisperService.progressHandler = { [weak self] progress in
 
-    print("Progress: \(progress)%")
+        self?.progressStreamHandler.eventSink?(progress)
 
-}
+    }
 
     whisperService.transcribe(audioPath: audioPath) { response in
 

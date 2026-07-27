@@ -4,9 +4,11 @@ import 'package:bloc/bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:offline_ai_tutor/core/dependency_injection/dependency_injection.dart';
 import 'package:offline_ai_tutor/features/talk/data/platform/whisper_method_channel.dart';
+import 'package:offline_ai_tutor/features/talk/domain/use_cases/convert_audio.dart';
 import 'package:offline_ai_tutor/features/talk/domain/use_cases/load_whisper_model.dart';
 import 'package:offline_ai_tutor/features/talk/domain/use_cases/start_recording.dart';
 import 'package:offline_ai_tutor/features/talk/domain/use_cases/stop_recording.dart';
+import 'package:offline_ai_tutor/features/talk/domain/use_cases/transcribe_audio.dart';
 import 'package:offline_ai_tutor/features/talk/presentation/cubit/recording_state.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -16,11 +18,15 @@ class RecordingCubit extends Cubit<RecordingState> {
   final StartRecording startRecording;
   final StopRecording stopRecording;
   final LoadWhisperModel loadWhisperModel;
+  final TranscribeAudio transcribeAudio;
+  final ConvertAudio convertAudio;
 
   RecordingCubit({
     required this.loadWhisperModel,
     required this.startRecording,
     required this.stopRecording,
+    required this.convertAudio,
+    required this.transcribeAudio,
   }) : super(const RecordingState());
 
   Future<void> startAudioRecording() async {
@@ -47,11 +53,15 @@ class RecordingCubit extends Cubit<RecordingState> {
       },
       (r) async {
         emit(state.copyWith(isRecording: false, audioPath: r));
-        final x = await sl<WhisperMethodChannel>().convertAudio(r ?? "");
+        final convertedAudio = await convertAudio(r ?? "");
 
-        final text = await sl<WhisperMethodChannel>().transcribe(x ?? "");
+        WhisperMethodChannel.progressStream.listen((progress) {
+          print("Progress: $progress%");
+        });
 
-        print("what is x $x");
+        final text = await transcribeAudio(convertedAudio ?? "");
+
+        print("what is x $convertedAudio");
         print("what is texttt $text");
       },
     );

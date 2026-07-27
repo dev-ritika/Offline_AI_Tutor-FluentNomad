@@ -7,26 +7,37 @@ import Flutter
     private let whisperPlugin = WhisperPlugin()
 
     override func application(
-        _ application: UIApplication,
-        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
-    ) -> Bool {
+    _ application: UIApplication,
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+) -> Bool {
 
-        GeneratedPluginRegistrant.register(with: self)
+    GeneratedPluginRegistrant.register(with: self)
 
-        let controller = window!.rootViewController as! FlutterViewController
+    let controller = window!.rootViewController as! FlutterViewController
 
-        let whisperChannel = FlutterMethodChannel(
-            name: "whisper_transcribe",
-            binaryMessenger: controller.binaryMessenger
-        )
+    let whisperChannel = FlutterMethodChannel(
+        name: "whisper_transcribe",
+        binaryMessenger: controller.binaryMessenger
+    )
 
-        whisperChannel.setMethodCallHandler { [weak self] call, result in
-            self?.whisperPlugin.handle(call, result: result)
-        }
+    let progressChannel = FlutterEventChannel(
+        name: "whisper_progress",
+        binaryMessenger: controller.binaryMessenger
+    )
 
-        return super.application(
-            application,
-            didFinishLaunchingWithOptions: launchOptions
-        )
+    progressChannel.setStreamHandler(
+        whisperPlugin.progressStreamHandler
+    )
+
+    whisperChannel.setMethodCallHandler { [weak self] call, result in
+        self?.whisperPlugin.handle(call, result: result)
     }
+
+    return super.application(
+        application,
+        didFinishLaunchingWithOptions: launchOptions
+    )
+}
+
+    
 }
