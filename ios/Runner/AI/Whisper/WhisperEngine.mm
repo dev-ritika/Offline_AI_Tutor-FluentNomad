@@ -20,11 +20,24 @@ static void whisperProgressCallback(
 
 }
 
+static bool whisperAbortCallback(
+    void * user_data
+) {
+
+    WhisperEngine *engine =
+    (__bridge WhisperEngine *)user_data;
+
+    return engine->_cancelRequested.load();
+
+}
+
 @implementation WhisperEngine {
 
     struct whisper_context *_context;
 
     AudioReader *_audioReader;
+
+    std::atomic<bool> _cancelRequested;
 
 }
 
@@ -35,6 +48,8 @@ static void whisperProgressCallback(
     if (self) {
 
         _audioReader = [[AudioReader alloc] init];
+
+        _cancelRequested = false;
 
     }
 
@@ -99,8 +114,22 @@ static void whisperProgressCallback(
     }
 }
 
+- (void)cancel {
+
+    _cancelRequested = true;
+
+}
+
+- (BOOL)isCancellationRequested {
+
+    return _cancelRequested.load();
+
+}
+
 - (NSString *)transcribe:(NSString *)audioPath
                    error:(NSError **)error {
+
+                    _cancelRequested = false;
 
     if (_context == nullptr) {
 
@@ -145,6 +174,9 @@ params.n_threads = 4;
 params.progress_callback = whisperProgressCallback;
 params.progress_callback_user_data = (__bridge void *)self;
 
+params.abort_callback = whisperAbortCallback;
+params.abort_callback_user_data = (__bridge void *)self;
+
 
 int result = whisper_full(
     _context,
@@ -155,6 +187,21 @@ int result = whisper_full(
 
 if (result != 0) {
 
+    if ([self isCancellationRequested]) {
+
+        if (error) {
+
+            *error = [NSError errorWithDomain:@"WhisperEngine"
+                                         code:1003
+                                     userInfo:@{
+                NSLocalizedDescriptionKey :
+                @"Transcription cancelled"
+            }];
+        }
+
+        return nil;
+    }
+
     if (error) {
 
         *error =
@@ -164,7 +211,6 @@ if (result != 0) {
             NSLocalizedDescriptionKey :
             @"Whisper transcription failed"
         }];
-
     }
 
     return nil;

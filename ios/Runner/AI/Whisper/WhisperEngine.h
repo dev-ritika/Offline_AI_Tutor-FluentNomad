@@ -13,6 +13,10 @@ void (^progressHandler)(int progress);
 
 - (void)releaseModel;
 
+- (void)cancel;
+
+- (BOOL)isCancellationRequested;
+
 - (nullable NSString *)transcribe:(NSString *)audioPath
                             error:(NSError **)error;
 

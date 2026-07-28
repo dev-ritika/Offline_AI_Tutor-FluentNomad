@@ -26,8 +26,14 @@ class WhisperPlugin: NSObject {
         case "isModelLoaded":
             result(whisperService.isModelLoaded)
 
+        case "cancel":
+    whisperService.cancel()
+    result(nil)
+
         default:
             result(FlutterMethodNotImplemented)
+
+        
     }
 
     }

@@ -73,6 +73,10 @@ final class WhisperService {
         isModelLoaded = false
     }
 
+    func cancel() {
+    bridge.cancel()
+}
+
 private func transcribeSync(audioPath: String) throws -> String {
 
     guard isModelLoaded else {

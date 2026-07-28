@@ -13,6 +13,10 @@ class WhisperMethodChannel {
     return _progressChannel.receiveBroadcastStream().cast<int>();
   }
 
+  Future<void> cancel() async {
+    await _whisperChannel.invokeMethod("cancel");
+  }
+
   Future<void> loadModel(String path) async {
     await _whisperChannel.invokeMethod('loadModel', {'path': path});
 

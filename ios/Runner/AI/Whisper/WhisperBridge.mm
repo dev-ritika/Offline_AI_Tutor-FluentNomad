@@ -46,6 +46,12 @@
 
 }
 
+- (void)cancel {
+
+    [engine cancel];
+
+}
+
 - (nullable NSString *)transcribe:(NSString *)audioPath
                             error:(NSError **)error {
     return [engine transcribe:audioPath
