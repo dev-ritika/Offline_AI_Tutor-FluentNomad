@@ -7,6 +7,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable)
 void (^progressHandler)(int progress);
 
+@property (nonatomic, copy, nullable)
+void (^segmentHandler)(NSString *text);
+
 - (BOOL)loadModel:(NSString *)modelPath;
 
 - (BOOL)isLoaded;

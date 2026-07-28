@@ -24,4 +24,9 @@ class TranscribeAudioRepositoryImpl implements TranscribeAudioRepository {
   Stream<int> transcriptionProgressStream() {
     return transcribeAudioDataSource.transcriptionProgressStream();
   }
+
+  @override
+  Future<void> cancelTranscription() async {
+    await transcribeAudioDataSource.cancelTranscription();
+  }
 }

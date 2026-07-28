@@ -7,6 +7,8 @@ class WhisperPlugin: NSObject {
 
     let progressStreamHandler = ProgressStreamHandler()
 
+    let transcriptStreamHandler = TranscriptStreamHandler()
+
     func handle(
         _ call: FlutterMethodCall,
         result: @escaping FlutterResult
@@ -94,6 +96,12 @@ private func handleTranscribe(
         self?.progressStreamHandler.eventSink?(progress)
 
     }
+
+    whisperService.segmentHandler = { [weak self] text in
+
+    self?.transcriptStreamHandler.eventSink?(text)
+
+}
 
     whisperService.transcribe(audioPath: audioPath) { response in
 

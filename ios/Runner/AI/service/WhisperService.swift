@@ -21,6 +21,18 @@ final class WhisperService {
 
 }
 
+var segmentHandler: ((String) -> Void)? {
+
+    didSet {
+
+        bridge.segmentHandler = { [weak self] text in
+            self?.segmentHandler?(text)
+        }
+
+    }
+
+}
+
     func convertAudio(at audioPath: String) -> String? {
 
     do {
@@ -87,6 +99,8 @@ private func transcribeSync(audioPath: String) throws -> String {
 
     return text
 }
+
+
 
 func transcribe(
     audioPath: String,

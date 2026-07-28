@@ -6,6 +6,8 @@ import Flutter
 
     private let whisperPlugin = WhisperPlugin()
 
+    private let transcriptStreamHandler = TranscriptStreamHandler()
+
     override func application(
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
@@ -25,9 +27,18 @@ import Flutter
         binaryMessenger: controller.binaryMessenger
     )
 
+    let transcriptChannel = FlutterEventChannel(
+    name: "whisper_transcript",
+    binaryMessenger: controller.binaryMessenger
+)
+
     progressChannel.setStreamHandler(
         whisperPlugin.progressStreamHandler
     )
+
+    transcriptChannel.setStreamHandler(
+    transcriptStreamHandler
+)
 
     whisperChannel.setMethodCallHandler { [weak self] call, result in
         self?.whisperPlugin.handle(call, result: result)

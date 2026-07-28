@@ -4,4 +4,6 @@ abstract interface class TranscribeAudioRepository {
   Future<String> transcribeAudio(String audioPath);
 
   Stream<int> transcriptionProgressStream();
+
+  Future<void> cancelTranscription();
 }

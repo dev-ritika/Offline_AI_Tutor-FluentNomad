@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:offline_ai_tutor/features/talk/data/platform/whisper_method_channel.dart';
+import 'package:offline_ai_tutor/features/talk/domain/use_cases/cancel_transcription.dart';
 import 'package:offline_ai_tutor/features/talk/domain/use_cases/convert_audio.dart';
 import 'package:offline_ai_tutor/features/talk/domain/use_cases/load_whisper_model.dart';
 import 'package:offline_ai_tutor/features/talk/domain/use_cases/start_recording.dart';
@@ -19,6 +20,7 @@ class RecordingCubit extends Cubit<RecordingState> {
   final LoadWhisperModel loadWhisperModel;
   final TranscribeAudio transcribeAudio;
   final ConvertAudio convertAudio;
+  final CancelTranscription cancelTranscription;
   final TranscriptionProgressStream transcriptionProgressStream;
 
   RecordingCubit({
@@ -28,6 +30,7 @@ class RecordingCubit extends Cubit<RecordingState> {
     required this.convertAudio,
     required this.transcribeAudio,
     required this.transcriptionProgressStream,
+    required this.cancelTranscription,
   }) : super(const RecordingState());
 
   Future<void> startAudioRecording() async {
@@ -61,6 +64,8 @@ class RecordingCubit extends Cubit<RecordingState> {
         });
 
         final text = await transcribeAudio(convertedAudio ?? "");
+
+        await cancelTranscription();
 
         print("what is x $convertedAudio");
         print("what is texttt $text");

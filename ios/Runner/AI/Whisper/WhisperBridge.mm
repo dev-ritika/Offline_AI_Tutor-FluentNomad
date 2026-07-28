@@ -28,6 +28,17 @@
     return engine.progressHandler;
 }
 
+- (void)setSegmentHandler:(void (^)(NSString *))segmentHandler {
+
+    engine.segmentHandler = segmentHandler;
+}
+
+
+- (void (^)(NSString *))segmentHandler {
+
+    return engine.segmentHandler;
+}
+
 - (BOOL)loadModel:(NSString *)modelPath {
 
     return [engine loadModel:modelPath];

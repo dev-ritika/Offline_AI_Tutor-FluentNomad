@@ -3,6 +3,7 @@
 #import "AudioData.h"
 #import <whisper/whisper.h>
 #import <AVFoundation/AVFoundation.h>
+#include <atomic>
 
 static void whisperProgressCallback(
     struct whisper_context * ctx,
@@ -20,6 +21,23 @@ static void whisperProgressCallback(
 
 }
 
+static void whisperNewSegmentCallback(
+    struct whisper_context * ctx,
+    struct whisper_state * state,
+    int n_new,
+    void * user_data
+)
+{
+
+    WhisperEngine *engine =
+        (__bridge WhisperEngine *)user_data;
+
+
+    [engine handleNewSegments:ctx
+                        count:n_new];
+
+}
+
 static bool whisperAbortCallback(
     void * user_data
 ) {
@@ -27,7 +45,7 @@ static bool whisperAbortCallback(
     WhisperEngine *engine =
     (__bridge WhisperEngine *)user_data;
 
-    return engine->_cancelRequested.load();
+    return [engine isCancellationRequested];
 
 }
 
@@ -36,6 +54,8 @@ static bool whisperAbortCallback(
     struct whisper_context *_context;
 
     AudioReader *_audioReader;
+
+    NSMutableString *_partialTranscript;
 
     std::atomic<bool> _cancelRequested;
 
@@ -48,6 +68,8 @@ static bool whisperAbortCallback(
     if (self) {
 
         _audioReader = [[AudioReader alloc] init];
+
+         _partialTranscript = [NSMutableString string];
 
         _cancelRequested = false;
 
@@ -126,6 +148,49 @@ static bool whisperAbortCallback(
 
 }
 
+- (void)handleNewSegments:(struct whisper_context *)ctx
+                    count:(int)nNew
+{
+
+    int segmentCount =
+        whisper_full_n_segments(ctx);
+
+
+    for (
+        int i = segmentCount - nNew;
+        i < segmentCount;
+        i++
+    ) {
+
+        const char *segment =
+            whisper_full_get_segment_text(
+                ctx,
+                i
+            );
+
+
+        if (segment != nullptr) {
+
+            [_partialTranscript appendString:
+                [NSString stringWithUTF8String:segment]
+            ];
+
+        }
+    }
+
+
+    if (self.segmentHandler) {
+
+        NSLog(@"📝 Partial transcript: %@", _partialTranscript);
+
+        self.segmentHandler(
+            [_partialTranscript copy]
+        );
+
+    }
+
+}
+
 - (NSString *)transcribe:(NSString *)audioPath
                    error:(NSError **)error {
 
@@ -176,6 +241,9 @@ params.progress_callback_user_data = (__bridge void *)self;
 
 params.abort_callback = whisperAbortCallback;
 params.abort_callback_user_data = (__bridge void *)self;
+
+params.new_segment_callback = whisperNewSegmentCallback;
+params.new_segment_callback_user_data = (__bridge void *)self;
 
 
 int result = whisper_full(
