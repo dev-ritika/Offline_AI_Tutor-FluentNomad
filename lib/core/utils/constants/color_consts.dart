@@ -35,6 +35,7 @@ class ColorConsts {
   static const Color blackOverlay = Color(0x60000000);
   static const Color whiteColor = Color(0xffffffff);
   static const Color whiteColor35 = Color(0x35ffffff);
+  static const Color whiteColor10 = Color(0x10ffffff);
 
   static const Color buttonPLinearColor1 = Color(0xff7C6AFF);
   static const Color buttonPLinearColor2 = Color(0xff9B8BFF);

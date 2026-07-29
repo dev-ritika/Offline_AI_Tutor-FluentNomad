@@ -1,46 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:offline_ai_tutor/core/dependency_injection/dependency_injection.dart';
-import 'package:offline_ai_tutor/features/talk/data/platform/whisper_method_channel.dart';
-import 'package:offline_ai_tutor/features/talk/presentation/utils/transcript_text_controller.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:offline_ai_tutor/core/common_widgets/chat_bubble.dart';
+import 'package:offline_ai_tutor/features/talk/presentation/cubit/recording_cubit.dart';
+import 'package:offline_ai_tutor/features/talk/presentation/cubit/recording_state.dart';
 
-class TranscriptedText extends StatefulWidget {
+class TranscriptedText extends StatelessWidget {
   const TranscriptedText({super.key});
 
   @override
-  State<TranscriptedText> createState() => _TranscriptedTextState();
-}
-
-class _TranscriptedTextState extends State<TranscriptedText> {
-  late TranscriptTextController textController;
-
-  @override
-  void initState() {
-    // textController = TranscriptTextController();
-
-    // sl<WhisperMethodChannel>().transcriptStream.listen((text) {
-    //   print("listenn text $text");
-    //   textController.addWhisperText(text);
-    // });
-
-    // print("datahashhh 1 ${identityHashCode(sl<WhisperMethodChannel>())}");
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    textController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Text("data");
-    //StreamBuilder(
-    ///stream: textController.stream,
-    //builder: (context, snapshot) {
-    //return Text(snapshot.data ?? "heyyy");
-    //},
-    //);
+    return BlocSelector<RecordingCubit, RecordingState, String?>(
+      selector: (state) => state.transcriptedText,
+      builder: (context, state) => state == null
+          ? const SizedBox.shrink()
+          : ChatBubble(childText: state, isUser: false),
+    );
   }
 }

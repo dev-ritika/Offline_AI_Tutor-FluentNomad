@@ -69,7 +69,7 @@ class RecordingCubit extends Cubit<RecordingState> {
 
         transcriptionAudioStream.getStream.listen((text) {
           print("ahskjdhasdj $text");
-          TranscriptTextController().addWhisperText(text);
+          addWhisperText(text);
         });
 
         await transcribeAudio(convertedAudio ?? "");
@@ -77,6 +77,34 @@ class RecordingCubit extends Cubit<RecordingState> {
         await cancelTranscription();
       },
     );
+  }
+
+  Timer? _transcriptTimer;
+
+  String _displayText = "";
+
+  void addWhisperText(String text) {
+    _transcriptTimer?.cancel();
+
+    _displayText = "";
+
+    int index = 0;
+
+    _transcriptTimer = Timer.periodic(const Duration(milliseconds: 40), (
+      timer,
+    ) {
+      if (index >= text.length) {
+        timer.cancel();
+
+        return;
+      }
+
+      _displayText += text[index];
+
+      index++;
+
+      emit(state.copyWith(transcriptedText: _displayText));
+    });
   }
 
   Timer? _timer;
@@ -123,6 +151,7 @@ class RecordingCubit extends Cubit<RecordingState> {
   Future<void> close() async {
     await stopRecording();
     stopTimer();
+    _transcriptTimer?.cancel();
     return super.close();
   }
 }
