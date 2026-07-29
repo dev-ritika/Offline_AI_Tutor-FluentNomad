@@ -136,6 +136,8 @@ import 'package:offline_ai_tutor/features/talk/domain/use_cases/stop_recording.d
     as _i211;
 import 'package:offline_ai_tutor/features/talk/domain/use_cases/transcribe_audio.dart'
     as _i504;
+import 'package:offline_ai_tutor/features/talk/domain/use_cases/transcription_audio_stream.dart'
+    as _i982;
 import 'package:offline_ai_tutor/features/talk/domain/use_cases/transcription_progress_stream.dart'
     as _i180;
 import 'package:offline_ai_tutor/features/talk/presentation/cubit/recording_cubit.dart'
@@ -350,6 +352,11 @@ extension GetItInjectableX on _i174.GetIt {
         transcribeAudioRepository: gh<_i670.TranscribeAudioRepository>(),
       ),
     );
+    gh.lazySingleton<_i982.TranscriptionAudioStream>(
+      () => _i982.TranscriptionAudioStream(
+        transcribeAudioRepository: gh<_i670.TranscribeAudioRepository>(),
+      ),
+    );
     gh.factory<_i180.TranscriptionProgressStream>(
       () => _i180.TranscriptionProgressStream(
         transcribeAudioRepository: gh<_i670.TranscribeAudioRepository>(),
@@ -405,6 +412,7 @@ extension GetItInjectableX on _i174.GetIt {
         transcribeAudio: gh<_i504.TranscribeAudio>(),
         transcriptionProgressStream: gh<_i180.TranscriptionProgressStream>(),
         cancelTranscription: gh<_i602.CancelTranscription>(),
+        transcriptionAudioStream: gh<_i982.TranscriptionAudioStream>(),
       ),
     );
     gh.lazySingleton<_i196.GetModelInstallStatus>(

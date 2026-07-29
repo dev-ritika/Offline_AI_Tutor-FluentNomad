@@ -15,23 +15,32 @@ class _TranscriptedTextState extends State<TranscriptedText> {
 
   @override
   void initState() {
-    textController = TranscriptTextController();
+    // textController = TranscriptTextController();
 
-    WhisperMethodChannel().transcriptStream.listen((text) {
-      print("listenn text $text");
-      textController.addWhisperText(text);
-    });
+    // sl<WhisperMethodChannel>().transcriptStream.listen((text) {
+    //   print("listenn text $text");
+    //   textController.addWhisperText(text);
+    // });
+
+    // print("datahashhh 1 ${identityHashCode(sl<WhisperMethodChannel>())}");
 
     super.initState();
   }
 
   @override
+  void dispose() {
+    textController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: textController.stream,
-      builder: (context, snapshot) {
-        return Text(snapshot.data ?? "heyyy");
-      },
-    );
+    return Text("data");
+    //StreamBuilder(
+    ///stream: textController.stream,
+    //builder: (context, snapshot) {
+    //return Text(snapshot.data ?? "heyyy");
+    //},
+    //);
   }
 }

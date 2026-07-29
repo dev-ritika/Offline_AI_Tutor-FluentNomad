@@ -8,8 +8,10 @@ import 'package:offline_ai_tutor/features/talk/domain/use_cases/load_whisper_mod
 import 'package:offline_ai_tutor/features/talk/domain/use_cases/start_recording.dart';
 import 'package:offline_ai_tutor/features/talk/domain/use_cases/stop_recording.dart';
 import 'package:offline_ai_tutor/features/talk/domain/use_cases/transcribe_audio.dart';
+import 'package:offline_ai_tutor/features/talk/domain/use_cases/transcription_audio_stream.dart';
 import 'package:offline_ai_tutor/features/talk/domain/use_cases/transcription_progress_stream.dart';
 import 'package:offline_ai_tutor/features/talk/presentation/cubit/recording_state.dart';
+import 'package:offline_ai_tutor/features/talk/presentation/utils/transcript_text_controller.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
@@ -22,6 +24,7 @@ class RecordingCubit extends Cubit<RecordingState> {
   final ConvertAudio convertAudio;
   final CancelTranscription cancelTranscription;
   final TranscriptionProgressStream transcriptionProgressStream;
+  final TranscriptionAudioStream transcriptionAudioStream;
 
   RecordingCubit({
     required this.loadWhisperModel,
@@ -31,6 +34,7 @@ class RecordingCubit extends Cubit<RecordingState> {
     required this.transcribeAudio,
     required this.transcriptionProgressStream,
     required this.cancelTranscription,
+    required this.transcriptionAudioStream,
   }) : super(const RecordingState());
 
   Future<void> startAudioRecording() async {
@@ -63,12 +67,14 @@ class RecordingCubit extends Cubit<RecordingState> {
           print("Progress: $progress%");
         });
 
-        final text = await transcribeAudio(convertedAudio ?? "");
+        transcriptionAudioStream.getStream.listen((text) {
+          print("ahskjdhasdj $text");
+          TranscriptTextController().addWhisperText(text);
+        });
+
+        await transcribeAudio(convertedAudio ?? "");
 
         await cancelTranscription();
-
-        print("what is x $convertedAudio");
-        print("what is texttt $text");
       },
     );
   }

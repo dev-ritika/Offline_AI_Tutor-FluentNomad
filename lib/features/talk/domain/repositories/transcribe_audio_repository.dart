@@ -6,4 +6,6 @@ abstract interface class TranscribeAudioRepository {
   Stream<int> transcriptionProgressStream();
 
   Future<void> cancelTranscription();
+
+  Stream<String> get transcriptionAudioStream;
 }

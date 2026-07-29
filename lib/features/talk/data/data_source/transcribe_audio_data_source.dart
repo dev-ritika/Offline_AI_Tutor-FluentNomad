@@ -9,6 +9,8 @@ abstract interface class TranscribeAudioDataSource {
   Stream<int> transcriptionProgressStream();
 
   Future<void> cancelTranscription();
+
+  Stream<String> get transcriptionAudioStream;
 }
 
 @LazySingleton(as: TranscribeAudioDataSource)
@@ -35,5 +37,10 @@ class TranscribeAudioDataSourceImpl implements TranscribeAudioDataSource {
   @override
   Future<void> cancelTranscription() async {
     await whisperMethodChannel.cancel();
+  }
+
+  @override
+  Stream<String> get transcriptionAudioStream {
+    return whisperMethodChannel.transcriptStream;
   }
 }

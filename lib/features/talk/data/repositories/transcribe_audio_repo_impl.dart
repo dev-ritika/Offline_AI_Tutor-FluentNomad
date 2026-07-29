@@ -29,4 +29,9 @@ class TranscribeAudioRepositoryImpl implements TranscribeAudioRepository {
   Future<void> cancelTranscription() async {
     await transcribeAudioDataSource.cancelTranscription();
   }
+
+  @override
+  Stream<String> get transcriptionAudioStream {
+    return transcribeAudioDataSource.transcriptionAudioStream;
+  }
 }
