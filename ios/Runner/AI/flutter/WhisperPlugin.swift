@@ -7,12 +7,27 @@ class WhisperPlugin: NSObject {
 
     let progressStreamHandler = ProgressStreamHandler()
 
-    let transcriptStreamHandler = TranscriptStreamHandler()
+    private let transcriptStreamHandler: TranscriptStreamHandler
+
+
+    init(
+        transcriptStreamHandler: TranscriptStreamHandler
+    ) {
+
+        self.transcriptStreamHandler = transcriptStreamHandler
+
+        super.init()
+    }
 
     func handle(
         _ call: FlutterMethodCall,
         result: @escaping FlutterResult
     ) {
+
+            print(
+    "Handler:",
+    ObjectIdentifier(transcriptStreamHandler)
+)
 
         switch call.method {
 
@@ -93,13 +108,30 @@ private func handleTranscribe(
 
     whisperService.progressHandler = { [weak self] progress in
 
+        DispatchQueue.main.async {
+
         self?.progressStreamHandler.eventSink?(progress)
 
     }
 
-    whisperService.segmentHandler = { [weak self] text in
 
-    self?.transcriptStreamHandler.eventSink?(text)
+
+
+
+
+
+
+
+
+    }
+
+whisperService.segmentHandler = { [weak self] text in
+
+    DispatchQueue.main.async {
+
+        self?.transcriptStreamHandler.eventSink?(text)
+
+    }
 
 }
 

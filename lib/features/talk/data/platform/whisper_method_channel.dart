@@ -9,6 +9,20 @@ class WhisperMethodChannel {
 
   static const EventChannel _progressChannel = EventChannel("whisper_progress");
 
+  static const EventChannel _transcriptChannel = EventChannel(
+    "whisper_transcript",
+  );
+
+  Stream<String> get transcriptStream {
+    print("🔥 transcriptStream created");
+
+    return _transcriptChannel.receiveBroadcastStream().map((event) {
+      print("🔥 EVENT RECEIVED: $event");
+
+      return event.toString();
+    });
+  }
+
   Stream<int> progressStream() {
     return _progressChannel.receiveBroadcastStream().cast<int>();
   }

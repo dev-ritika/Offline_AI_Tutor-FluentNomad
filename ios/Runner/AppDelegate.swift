@@ -4,14 +4,24 @@ import Flutter
 @main
 @objc class AppDelegate: FlutterAppDelegate {
 
-    private let whisperPlugin = WhisperPlugin()
 
-    private let transcriptStreamHandler = TranscriptStreamHandler()
+    private let transcriptStreamHandler =
+    TranscriptStreamHandler()
+
+    private lazy var whisperPlugin =
+    WhisperPlugin(
+        transcriptStreamHandler:
+            transcriptStreamHandler
+    )
+
+   
 
     override func application(
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
 ) -> Bool {
+
+     print("Handler:", ObjectIdentifier(transcriptStreamHandler))
 
     GeneratedPluginRegistrant.register(with: self)
 

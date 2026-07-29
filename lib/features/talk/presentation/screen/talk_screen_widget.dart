@@ -4,6 +4,7 @@ import 'package:offline_ai_tutor/features/talk/data/platform/whisper_method_chan
 import 'package:offline_ai_tutor/features/talk/presentation/cubit/recording_cubit.dart';
 import 'package:offline_ai_tutor/features/talk/presentation/widgets/record_cta.dart';
 import 'package:offline_ai_tutor/features/talk/presentation/widgets/talk_screen_header.dart';
+import 'package:offline_ai_tutor/features/talk/presentation/widgets/transcripted_text.dart';
 
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -39,7 +40,12 @@ class _TalkScreenWidgetState extends State<TalkScreenWidget> {
           padding: EdgeInsets.symmetric(horizontal: 18, vertical: 25),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [TalkScreenHeader(), Spacer(), RecordCta()],
+            children: [
+              TalkScreenHeader(),
+              TranscriptedText(),
+              Spacer(),
+              RecordCta(),
+            ],
           ),
         ),
       ),
