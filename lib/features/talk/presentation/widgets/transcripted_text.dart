@@ -13,7 +13,7 @@ class TranscriptedText extends StatelessWidget {
       selector: (state) => state.transcriptedText,
       builder: (context, state) => state == null
           ? const SizedBox.shrink()
-          : ChatBubble(childText: state, isUser: false),
+          : ChatBubble(childText: state),
     );
   }
 }

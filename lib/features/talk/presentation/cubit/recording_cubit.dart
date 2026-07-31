@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:offline_ai_tutor/features/talk/data/platform/whisper_method_channel.dart';
 import 'package:offline_ai_tutor/features/talk/domain/use_cases/cancel_transcription.dart';
 import 'package:offline_ai_tutor/features/talk/domain/use_cases/convert_audio.dart';
 import 'package:offline_ai_tutor/features/talk/domain/use_cases/load_whisper_model.dart';
@@ -11,7 +10,6 @@ import 'package:offline_ai_tutor/features/talk/domain/use_cases/transcribe_audio
 import 'package:offline_ai_tutor/features/talk/domain/use_cases/transcription_audio_stream.dart';
 import 'package:offline_ai_tutor/features/talk/domain/use_cases/transcription_progress_stream.dart';
 import 'package:offline_ai_tutor/features/talk/presentation/cubit/recording_state.dart';
-import 'package:offline_ai_tutor/features/talk/presentation/utils/transcript_text_controller.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
@@ -26,6 +24,9 @@ class RecordingCubit extends Cubit<RecordingState> {
   final TranscriptionProgressStream transcriptionProgressStream;
   final TranscriptionAudioStream transcriptionAudioStream;
 
+  StreamSubscription<String>? _transcriptSubscription;
+  StreamSubscription<int>? _progressSubscription;
+
   RecordingCubit({
     required this.loadWhisperModel,
     required this.startRecording,
@@ -35,7 +36,16 @@ class RecordingCubit extends Cubit<RecordingState> {
     required this.transcriptionProgressStream,
     required this.cancelTranscription,
     required this.transcriptionAudioStream,
-  }) : super(const RecordingState());
+  }) : super(const RecordingState()) {
+    _progressSubscription = transcriptionProgressStream().listen((progress) {
+      print("Progress: $progress%");
+    });
+
+    _transcriptSubscription = transcriptionAudioStream.getStream.listen((text) {
+      print("ahskjdhasdj $text");
+      addWhisperText(text);
+    });
+  }
 
   Future<void> startAudioRecording() async {
     emit(state.copyWith(isRecording: true));
@@ -63,18 +73,10 @@ class RecordingCubit extends Cubit<RecordingState> {
         emit(state.copyWith(isRecording: false, audioPath: r));
         final convertedAudio = await convertAudio(r ?? "");
 
-        transcriptionProgressStream().listen((progress) {
-          print("Progress: $progress%");
-        });
-
-        transcriptionAudioStream.getStream.listen((text) {
-          print("ahskjdhasdj $text");
-          addWhisperText(text);
-        });
-
         await transcribeAudio(convertedAudio ?? "");
 
         await cancelTranscription();
+        _displayText = "";
       },
     );
   }
@@ -85,8 +87,6 @@ class RecordingCubit extends Cubit<RecordingState> {
 
   void addWhisperText(String text) {
     _transcriptTimer?.cancel();
-
-    _displayText = "";
 
     int index = 0;
 
@@ -152,6 +152,8 @@ class RecordingCubit extends Cubit<RecordingState> {
     await stopRecording();
     stopTimer();
     _transcriptTimer?.cancel();
+    await _progressSubscription?.cancel();
+    await _transcriptSubscription?.cancel();
     return super.close();
   }
 }

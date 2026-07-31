@@ -152,6 +152,8 @@ static bool whisperAbortCallback(
                     count:(int)nNew
 {
 
+    NSLog(@"🔥 handleNewSegments called. nNew=%d", nNew);
+
     int segmentCount =
         whisper_full_n_segments(ctx);
 
@@ -183,6 +185,8 @@ static bool whisperAbortCallback(
 
         NSLog(@"📝 Partial transcript: %@", _partialTranscript);
 
+        NSLog(@"🔥 Sending transcript to Flutter");
+
         self.segmentHandler(
             [_partialTranscript copy]
         );
@@ -210,6 +214,8 @@ static bool whisperAbortCallback(
 
     return nil;
 }
+
+_partialTranscript = [NSMutableString string];
 
     NSLog(@"Audio Path: %@", audioPath);
 
