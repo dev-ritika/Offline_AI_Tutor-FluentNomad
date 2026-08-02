@@ -42,7 +42,6 @@ class RecordingCubit extends Cubit<RecordingState> {
     });
 
     _transcriptSubscription = transcriptionAudioStream.getStream.listen((text) {
-      print("ahskjdhasdj $text");
       addWhisperText(text);
     });
   }

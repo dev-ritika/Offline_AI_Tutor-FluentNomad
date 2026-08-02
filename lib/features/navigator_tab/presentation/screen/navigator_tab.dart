@@ -2,7 +2,6 @@ import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.da
 import 'package:flutter/material.dart';
 import 'package:offline_ai_tutor/core/utils/constants/color_consts.dart';
 import 'package:offline_ai_tutor/features/talk/presentation/screen/talk_screen.dart';
-import 'package:offline_ai_tutor/features/talk/presentation/screen/talk_screen_widget.dart';
 import 'package:offline_ai_tutor/features/home/presentation/screen/home.dart';
 
 class NavigatorTab extends StatefulWidget {

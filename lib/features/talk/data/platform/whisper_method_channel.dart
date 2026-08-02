@@ -16,7 +16,6 @@ class WhisperMethodChannel {
   late final Stream<String> transcriptStream = _transcriptChannel
       .receiveBroadcastStream()
       .map((event) {
-        print("🔥 EVENT RECEIVED: $event");
         return event.toString();
       });
 
@@ -31,10 +30,7 @@ class WhisperMethodChannel {
   Future<void> loadModel(String path) async {
     await _whisperChannel.invokeMethod('loadModel', {'path': path});
 
-    final bool loaded =
-        await _whisperChannel.invokeMethod<bool>("isModelLoaded") ?? false;
-
-    print("Loaded = $loaded");
+    await _whisperChannel.invokeMethod<bool>("isModelLoaded") ?? false;
   }
 
   Future<String?> convertAudio(String audioPath) async {
@@ -47,8 +43,6 @@ class WhisperMethodChannel {
     final String text = await _whisperChannel.invokeMethod("transcribe", {
       "audioPath": audioPath,
     });
-
-    print("called transcribe $text");
 
     return text;
   }

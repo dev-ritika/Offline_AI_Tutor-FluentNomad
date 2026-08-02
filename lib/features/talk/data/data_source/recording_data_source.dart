@@ -44,8 +44,6 @@ class RecordingDataSourceImpl implements RecordingDataSource {
 
       path = await recorder.stop();
 
-      print("pathpath $path");
-
       if (path != null) {
         return right(path);
       } else {

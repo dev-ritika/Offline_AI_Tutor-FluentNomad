@@ -31,7 +31,7 @@ class _RecordCtaWidgetState extends State<RecordCtaWidget>
 
     fadeController = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 1),
+      duration: const Duration(seconds: 1),
     );
 
     animation = Tween<double>(
@@ -63,7 +63,6 @@ class _RecordCtaWidgetState extends State<RecordCtaWidget>
           widget.callback?.call();
 
           if (!isTapped) {
-            print("called 1");
             controller.forward();
             controller.repeat();
 
@@ -71,7 +70,6 @@ class _RecordCtaWidgetState extends State<RecordCtaWidget>
             fadeController.repeat();
             isTapped = !isTapped;
           } else {
-            print("called 2");
             controller.stop();
             fadeController.stop();
             isTapped = !isTapped;
@@ -103,7 +101,7 @@ class _RecordCtaWidgetState extends State<RecordCtaWidget>
 
                   // Middle animated circle
                   AnimatedContainer(
-                    duration: Duration(milliseconds: 500),
+                    duration: const Duration(milliseconds: 500),
                     width: (animation.value - 5) * 2,
                     height: (animation.value - 5) * 2,
                     decoration: const BoxDecoration(

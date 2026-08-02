@@ -16,11 +16,9 @@ class _RecordCtaState extends State<RecordCta> {
 
   void tapAction() async {
     if (isTapped) {
-      print("stopped recording");
       context.read<RecordingCubit>().stopAudioRecording();
       context.read<RecordingCubit>().stopTimer();
     } else {
-      print("started recording");
       context.read<RecordingCubit>().startAudioRecording();
       context.read<RecordingCubit>().startTimer();
     }

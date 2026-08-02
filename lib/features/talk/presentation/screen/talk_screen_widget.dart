@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:offline_ai_tutor/features/talk/data/platform/whisper_method_channel.dart';
 import 'package:offline_ai_tutor/features/talk/presentation/cubit/recording_cubit.dart';
 import 'package:offline_ai_tutor/features/talk/presentation/widgets/record_cta.dart';
 import 'package:offline_ai_tutor/features/talk/presentation/widgets/talk_screen_header.dart';
 import 'package:offline_ai_tutor/features/talk/presentation/widgets/transcripted_text.dart';
-
-import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
 
 class TalkScreenWidget extends StatefulWidget {
   const TalkScreenWidget({super.key});

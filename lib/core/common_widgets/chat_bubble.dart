@@ -20,16 +20,20 @@ class ChatBubble extends StatelessWidget {
             top: 20,
             bottom: 5,
           ),
-          padding: EdgeInsets.all(12),
+          padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
             color: isUser
                 ? ColorConsts.buttonSecondaryColor
                 : ColorConsts.whiteColor10,
             borderRadius: BorderRadius.only(
-              bottomLeft: isUser ? Radius.circular(20) : Radius.circular(0),
-              bottomRight: isUser ? Radius.circular(0) : Radius.circular(20),
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
+              bottomLeft: isUser
+                  ? const Radius.circular(20)
+                  : const Radius.circular(0),
+              bottomRight: isUser
+                  ? const Radius.circular(0)
+                  : const Radius.circular(20),
+              topLeft: const Radius.circular(20),
+              topRight: const Radius.circular(20),
             ),
             border: Border.all(
               color: isUser
