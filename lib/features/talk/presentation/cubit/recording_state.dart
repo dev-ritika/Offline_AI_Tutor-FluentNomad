@@ -5,6 +5,7 @@ class RecordingState extends Equatable {
   final Failures? failure;
   final String? audioPath;
   final bool isRecording;
+  final bool isTranscribing;
   final String? recordingTime;
   final String? transcriptedText;
 
@@ -12,6 +13,7 @@ class RecordingState extends Equatable {
     this.failure,
     this.audioPath,
     this.isRecording = false,
+    this.isTranscribing = false,
     this.recordingTime = "00 : 00 : 00",
     this.transcriptedText,
   });
@@ -20,6 +22,7 @@ class RecordingState extends Equatable {
     Failures? failure,
     String? audioPath,
     bool? isRecording,
+    bool? isTranscribing,
     String? recordingTime,
     String? transcriptedText,
   }) {
@@ -29,6 +32,7 @@ class RecordingState extends Equatable {
       isRecording: isRecording ?? this.isRecording,
       recordingTime: recordingTime ?? this.recordingTime,
       transcriptedText: transcriptedText ?? this.transcriptedText,
+      isTranscribing: isTranscribing ?? this.isTranscribing,
     );
   }
 
@@ -39,5 +43,6 @@ class RecordingState extends Equatable {
     isRecording,
     recordingTime,
     transcriptedText,
+    isTranscribing,
   ];
 }

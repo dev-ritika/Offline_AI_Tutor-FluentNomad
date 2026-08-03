@@ -56,7 +56,7 @@ class RecordingCubit extends Cubit<RecordingState> {
         emit(state.copyWith(isRecording: false, failure: l));
       },
       (r) {
-        emit(state.copyWith(failure: null));
+        emit(state.copyWith(failure: null, isRecording: true));
       },
     );
   }
@@ -69,13 +69,21 @@ class RecordingCubit extends Cubit<RecordingState> {
         emit(state.copyWith(isRecording: false, failure: l));
       },
       (r) async {
-        emit(state.copyWith(isRecording: false, audioPath: r));
+        emit(
+          state.copyWith(
+            isRecording: false,
+            audioPath: r,
+            isTranscribing: true,
+          ),
+        );
         final convertedAudio = await convertAudio(r ?? "");
 
         await transcribeAudio(convertedAudio ?? "");
 
         await cancelTranscription();
+        _transcriptTimer?.cancel();
         _displayText = "";
+        emit(state.copyWith(isTranscribing: false));
       },
     );
   }
