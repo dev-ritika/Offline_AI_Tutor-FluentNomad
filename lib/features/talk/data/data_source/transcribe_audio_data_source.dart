@@ -8,6 +8,10 @@ abstract interface class TranscribeAudioDataSource {
 
   Stream<int> transcriptionProgressStream();
 
+  Stream<double> audioLevelStream();
+  Future<void> startAudioLevelStream();
+  Future<void> stopAudioLevelStream();
+
   Future<void> cancelTranscription();
 
   Stream<String> get transcriptionAudioStream;
@@ -42,5 +46,20 @@ class TranscribeAudioDataSourceImpl implements TranscribeAudioDataSource {
   @override
   Stream<String> get transcriptionAudioStream {
     return whisperMethodChannel.transcriptStream;
+  }
+
+  @override
+  Stream<double> audioLevelStream() {
+    return whisperMethodChannel.audioLevelStream();
+  }
+
+  @override
+  Future<void> startAudioLevelStream() {
+    return whisperMethodChannel.startAudioLevel();
+  }
+
+  @override
+  Future<void> stopAudioLevelStream() {
+    return whisperMethodChannel.stopAudioLevel();
   }
 }

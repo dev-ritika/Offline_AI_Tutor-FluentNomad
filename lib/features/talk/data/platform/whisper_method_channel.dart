@@ -13,6 +13,10 @@ class WhisperMethodChannel {
     "whisper_transcript",
   );
 
+  static const EventChannel _audioLevelChannel = EventChannel(
+    "audio_level_stream",
+  );
+
   late final Stream<String> transcriptStream = _transcriptChannel
       .receiveBroadcastStream()
       .map((event) {
@@ -23,8 +27,22 @@ class WhisperMethodChannel {
     return _progressChannel.receiveBroadcastStream().cast<int>();
   }
 
+  Stream<double> audioLevelStream() {
+    return _audioLevelChannel.receiveBroadcastStream().map(
+      (event) => (event as num).toDouble(),
+    );
+  }
+
   Future<void> cancel() async {
     await _whisperChannel.invokeMethod("cancel");
+  }
+
+  Future<void> startAudioLevel() async {
+    await _whisperChannel.invokeMethod("startAudioLevel");
+  }
+
+  Future<void> stopAudioLevel() async {
+    await _whisperChannel.invokeMethod("stopAudioLevel");
   }
 
   Future<void> loadModel(String path) async {

@@ -8,6 +8,10 @@ class WhisperPlugin: NSObject {
     let progressStreamHandler = ProgressStreamHandler()
 
     private let transcriptStreamHandler: TranscriptStreamHandler
+    
+    private let audioLevelMonitor = AudioLevelMonitor()
+
+    let audioLevelStreamHandler = AudioLevelStreamHandler()
 
 
     init(
@@ -46,6 +50,12 @@ class WhisperPlugin: NSObject {
         case "cancel":
     whisperService.cancel()
     result(nil)
+
+        case "startAudioLevel":
+    handleStartAudioLevel(result: result)
+
+case "stopAudioLevel":
+    handleStopAudioLevel(result: result)
 
         default:
             result(FlutterMethodNotImplemented)
@@ -115,14 +125,6 @@ private func handleTranscribe(
     }
 
 
-
-
-
-
-
-
-
-
     }
 
 whisperService.segmentHandler = { [weak self] text in
@@ -181,5 +183,47 @@ private func handleConvertAudio(
 
     result(wavPath)
 }
+
+
+private func handleStartAudioLevel(
+    result: @escaping FlutterResult
+) {
+
+    audioLevelMonitor.levelHandler = { [weak self] level in
+
+        self?.audioLevelStreamHandler.eventSink?(level)
+
+    }
+
+    do {
+
+        try audioLevelMonitor.start()
+
+        result(nil)
+
+    } catch {
+
+        result(
+            FlutterError(
+                code: "AUDIO_LEVEL_START_ERROR",
+                message: error.localizedDescription,
+                details: nil
+            )
+        )
+    }
+}
+
+
+private func handleStopAudioLevel(
+    result: @escaping FlutterResult
+) {
+
+    audioLevelMonitor.stop()
+
+    audioLevelMonitor.levelHandler = nil
+
+    result(nil)
+}
+
 
 }

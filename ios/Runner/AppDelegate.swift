@@ -14,6 +14,10 @@ import Flutter
             transcriptStreamHandler
     )
 
+
+private let audioLevelStreamHandler =
+    AudioLevelStreamHandler()
+
    
 
     override func application(
@@ -42,12 +46,21 @@ import Flutter
     binaryMessenger: controller.binaryMessenger
 )
 
+    let audioLevelChannel = FlutterEventChannel(
+    name: "audio_level_stream",
+    binaryMessenger: controller.binaryMessenger
+)
+
     progressChannel.setStreamHandler(
         whisperPlugin.progressStreamHandler
     )
 
     transcriptChannel.setStreamHandler(
     transcriptStreamHandler
+)
+
+audioLevelChannel.setStreamHandler(
+    whisperPlugin.audioLevelStreamHandler
 )
 
     whisperChannel.setMethodCallHandler { [weak self] call, result in
