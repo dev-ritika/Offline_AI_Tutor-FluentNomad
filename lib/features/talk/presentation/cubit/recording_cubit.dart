@@ -76,9 +76,23 @@ class RecordingCubit extends Cubit<RecordingState> {
             isTranscribing: true,
           ),
         );
+
         final convertedAudio = await convertAudio(r ?? "");
 
-        await transcribeAudio(convertedAudio ?? "");
+        if (convertedAudio == null) {
+          emit(state.copyWith(isTranscribing: false));
+
+          return;
+        }
+
+        final transcription = await transcribeAudio(convertedAudio);
+
+        emit(state.copyWith(isTranscribing: false));
+
+        if (transcription == null) {
+          print("❌ Transcription failed");
+          return;
+        }
 
         await cancelTranscription();
         _transcriptTimer?.cancel();
