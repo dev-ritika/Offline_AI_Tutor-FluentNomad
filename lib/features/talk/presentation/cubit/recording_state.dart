@@ -8,6 +8,7 @@ class RecordingState extends Equatable {
   final bool isTranscribing;
   final String? recordingTime;
   final String? transcriptedText;
+  final double audioLevel;
 
   const RecordingState({
     this.failure,
@@ -16,6 +17,7 @@ class RecordingState extends Equatable {
     this.isTranscribing = false,
     this.recordingTime = "00 : 00 : 00",
     this.transcriptedText,
+    this.audioLevel = 0,
   });
 
   RecordingState copyWith({
@@ -25,6 +27,7 @@ class RecordingState extends Equatable {
     bool? isTranscribing,
     String? recordingTime,
     String? transcriptedText,
+    double? audioLevel,
   }) {
     return RecordingState(
       audioPath: audioPath ?? this.audioPath,
@@ -33,6 +36,7 @@ class RecordingState extends Equatable {
       recordingTime: recordingTime ?? this.recordingTime,
       transcriptedText: transcriptedText ?? this.transcriptedText,
       isTranscribing: isTranscribing ?? this.isTranscribing,
+      audioLevel: audioLevel ?? this.audioLevel,
     );
   }
 
@@ -44,5 +48,6 @@ class RecordingState extends Equatable {
     recordingTime,
     transcriptedText,
     isTranscribing,
+    audioLevel,
   ];
 }

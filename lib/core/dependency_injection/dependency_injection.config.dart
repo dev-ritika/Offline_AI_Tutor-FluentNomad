@@ -104,6 +104,8 @@ import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/save_user_
     as _i1042;
 import 'package:offline_ai_tutor/features/onboarding/presentation/cubit/onboarding_cubit.dart'
     as _i960;
+import 'package:offline_ai_tutor/features/talk/data/data_source/audio_level_data_source.dart'
+    as _i174;
 import 'package:offline_ai_tutor/features/talk/data/data_source/load_model_data_source.dart'
     as _i34;
 import 'package:offline_ai_tutor/features/talk/data/data_source/recording_data_source.dart'
@@ -112,26 +114,36 @@ import 'package:offline_ai_tutor/features/talk/data/data_source/transcribe_audio
     as _i566;
 import 'package:offline_ai_tutor/features/talk/data/platform/whisper_method_channel.dart'
     as _i880;
+import 'package:offline_ai_tutor/features/talk/data/repositories/audio_level_repo_impl.dart'
+    as _i837;
 import 'package:offline_ai_tutor/features/talk/data/repositories/load_whisper_model_repo_impl.dart'
     as _i619;
 import 'package:offline_ai_tutor/features/talk/data/repositories/recording_repo_impl.dart'
     as _i927;
 import 'package:offline_ai_tutor/features/talk/data/repositories/transcribe_audio_repo_impl.dart'
     as _i989;
+import 'package:offline_ai_tutor/features/talk/domain/repositories/audio_level_repository.dart'
+    as _i638;
 import 'package:offline_ai_tutor/features/talk/domain/repositories/load_whisper_model_repository.dart'
     as _i684;
 import 'package:offline_ai_tutor/features/talk/domain/repositories/recording_repository.dart'
     as _i834;
 import 'package:offline_ai_tutor/features/talk/domain/repositories/transcribe_audio_repository.dart'
     as _i670;
+import 'package:offline_ai_tutor/features/talk/domain/use_cases/audio_level_stream.dart'
+    as _i829;
 import 'package:offline_ai_tutor/features/talk/domain/use_cases/cancel_transcription.dart'
     as _i602;
 import 'package:offline_ai_tutor/features/talk/domain/use_cases/convert_audio.dart'
     as _i1000;
 import 'package:offline_ai_tutor/features/talk/domain/use_cases/load_whisper_model.dart'
     as _i949;
+import 'package:offline_ai_tutor/features/talk/domain/use_cases/start_audio_level_stream.dart'
+    as _i402;
 import 'package:offline_ai_tutor/features/talk/domain/use_cases/start_recording.dart'
     as _i861;
+import 'package:offline_ai_tutor/features/talk/domain/use_cases/stop_audio_level_stream.dart'
+    as _i983;
 import 'package:offline_ai_tutor/features/talk/domain/use_cases/stop_recording.dart'
     as _i211;
 import 'package:offline_ai_tutor/features/talk/domain/use_cases/transcribe_audio.dart'
@@ -196,6 +208,11 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i738.Box<_i666.UserDataModel>>(
       () => hiveBoxesModule.getUserPrefBox,
       instanceName: 'userPrefs',
+    );
+    gh.lazySingleton<_i174.AudioLevelDataSource>(
+      () => _i174.AudioLevelDataSourceImpl(
+        whisperMethodChannel: gh<_i880.WhisperMethodChannel>(),
+      ),
     );
     gh.lazySingleton<_i409.RecordingDataSource>(
       () => _i409.RecordingDataSourceImpl(),
@@ -273,6 +290,11 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i670.TranscribeAudioRepository>(
       () => _i989.TranscribeAudioRepositoryImpl(
         transcribeAudioDataSource: gh<_i566.TranscribeAudioDataSource>(),
+      ),
+    );
+    gh.lazySingleton<_i638.AudioLevelRepository>(
+      () => _i837.AudioLevelRepoImpl(
+        audioLevelDataSource: gh<_i174.AudioLevelDataSource>(),
       ),
     );
     gh.lazySingleton<_i394.LanguageRepository>(
@@ -362,6 +384,21 @@ extension GetItInjectableX on _i174.GetIt {
         transcribeAudioRepository: gh<_i670.TranscribeAudioRepository>(),
       ),
     );
+    gh.lazySingleton<_i829.AudioLevelStream>(
+      () => _i829.AudioLevelStream(
+        audioLevelRepository: gh<_i638.AudioLevelRepository>(),
+      ),
+    );
+    gh.lazySingleton<_i402.StartAudioLevelStream>(
+      () => _i402.StartAudioLevelStream(
+        audioLevelRepository: gh<_i638.AudioLevelRepository>(),
+      ),
+    );
+    gh.lazySingleton<_i983.StopAudioLevelStream>(
+      () => _i983.StopAudioLevelStream(
+        audioLevelRepository: gh<_i638.AudioLevelRepository>(),
+      ),
+    );
     gh.lazySingleton<_i649.SaveUserDataRepository>(
       () => _i974.SaveUserDataRepoImpl(
         saveUserDataLocallyDataSource:
@@ -376,6 +413,21 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i907.GetUserDataRepository>(
       () => _i1059.GetUserDataRepoImpl(
         getUserDataSource: gh<_i861.GetUserDataSource>(),
+      ),
+    );
+    gh.factory<_i3.RecordingCubit>(
+      () => _i3.RecordingCubit(
+        loadWhisperModel: gh<_i949.LoadWhisperModel>(),
+        startRecording: gh<_i861.StartRecording>(),
+        stopRecording: gh<_i211.StopRecording>(),
+        convertAudio: gh<_i1000.ConvertAudio>(),
+        transcribeAudio: gh<_i504.TranscribeAudio>(),
+        transcriptionProgressStream: gh<_i180.TranscriptionProgressStream>(),
+        cancelTranscription: gh<_i602.CancelTranscription>(),
+        transcriptionAudioStream: gh<_i982.TranscriptionAudioStream>(),
+        audioLevelStream: gh<_i829.AudioLevelStream>(),
+        startAudioLevelStream: gh<_i402.StartAudioLevelStream>(),
+        stopAudioLevelStream: gh<_i983.StopAudioLevelStream>(),
       ),
     );
     gh.lazySingleton<_i247.SaveModelInstallStatus>(
@@ -401,18 +453,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i546.GetModelInstallStatusRepository>(
       () => _i862.GetModelInstallStatusRepoImpl(
         getModelInstallStatusSource: gh<_i1028.GetModelInstallStatusSource>(),
-      ),
-    );
-    gh.factory<_i3.RecordingCubit>(
-      () => _i3.RecordingCubit(
-        loadWhisperModel: gh<_i949.LoadWhisperModel>(),
-        startRecording: gh<_i861.StartRecording>(),
-        stopRecording: gh<_i211.StopRecording>(),
-        convertAudio: gh<_i1000.ConvertAudio>(),
-        transcribeAudio: gh<_i504.TranscribeAudio>(),
-        transcriptionProgressStream: gh<_i180.TranscriptionProgressStream>(),
-        cancelTranscription: gh<_i602.CancelTranscription>(),
-        transcriptionAudioStream: gh<_i982.TranscriptionAudioStream>(),
       ),
     );
     gh.lazySingleton<_i196.GetModelInstallStatus>(
