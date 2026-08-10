@@ -176,6 +176,7 @@ class RecordingCubit extends Cubit<RecordingState> {
     stopwatch.stop();
     stopwatch.reset();
     _timer?.cancel();
+    _streamSubscription?.cancel();
   }
 
   Future<void> loadWhisperModelCall() async {
