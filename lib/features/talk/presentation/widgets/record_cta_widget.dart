@@ -1,12 +1,11 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:offline_ai_tutor/core/utils/constants/color_consts.dart';
 
 class RecordCtaWidget extends StatefulWidget {
   final VoidCallback? callback;
-  final bool isTapped;
+  final double audioLevel;
 
-  const RecordCtaWidget({super.key, this.callback, this.isTapped = false});
+  const RecordCtaWidget({super.key, this.callback, required this.audioLevel});
 
   @override
   State<RecordCtaWidget> createState() => _RecordCtaWidgetState();
@@ -14,30 +13,18 @@ class RecordCtaWidget extends StatefulWidget {
 
 class _RecordCtaWidgetState extends State<RecordCtaWidget>
     with TickerProviderStateMixin {
-  late AnimationController controller;
   late AnimationController fadeController;
-
-  late Animation<double> animation;
   late Animation<double> fadeAnimation;
   bool isTapped = false;
 
+  double audioLevel = 0;
+
   @override
   void initState() {
-    isTapped = widget.isTapped;
-    controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 500),
-    );
-
     fadeController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 1),
     );
-
-    animation = Tween<double>(
-      begin: 20 + Random().nextDouble() * 20,
-      end: 40 + Random().nextDouble() * 20,
-    ).animate(CurvedAnimation(parent: controller, curve: Curves.ease));
 
     fadeAnimation = Tween<double>(
       begin: 0.5,
@@ -48,8 +35,16 @@ class _RecordCtaWidgetState extends State<RecordCtaWidget>
   }
 
   @override
+  void didUpdateWidget(covariant RecordCtaWidget oldWidget) {
+    audioLevel = 40 + (widget.audioLevel * 100);
+
+    print("widget.audioLevel ${audioLevel}");
+
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
   void dispose() {
-    controller.dispose();
     fadeController.dispose();
     super.dispose();
   }
@@ -63,21 +58,17 @@ class _RecordCtaWidgetState extends State<RecordCtaWidget>
           widget.callback?.call();
 
           if (!isTapped) {
-            controller.forward();
-            controller.repeat();
-
             fadeController.forward();
             fadeController.repeat();
             isTapped = !isTapped;
           } else {
-            controller.stop();
             fadeController.stop();
             isTapped = !isTapped;
           }
         },
 
         child: AnimatedBuilder(
-          animation: animation,
+          animation: fadeAnimation,
           builder: (context, child) {
             return SizedBox(
               width: 125,
@@ -88,13 +79,11 @@ class _RecordCtaWidgetState extends State<RecordCtaWidget>
                   // Outer animated circle
                   AnimatedContainer(
                     duration: const Duration(milliseconds: 500),
-                    width: (animation.value + 8) * 2,
-                    height: (animation.value + 8) * 2,
-                    decoration: BoxDecoration(
+                    width: (audioLevel) * 1.6,
+                    height: (audioLevel) * 1.6,
+                    decoration: const BoxDecoration(
                       // shape: BoxShape.circle,
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(animation.value + 16),
-                      ),
+                      borderRadius: BorderRadius.all(Radius.circular(100)),
                       color: ColorConsts.buttonSecondaryColor,
                     ),
                   ),
@@ -102,8 +91,8 @@ class _RecordCtaWidgetState extends State<RecordCtaWidget>
                   // Middle animated circle
                   AnimatedContainer(
                     duration: const Duration(milliseconds: 500),
-                    width: (animation.value - 5) * 2,
-                    height: (animation.value - 5) * 2,
+                    width: (audioLevel * 1.3),
+                    height: (audioLevel * 1.3),
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: ColorConsts.buttonSecondaryStrokeColor,

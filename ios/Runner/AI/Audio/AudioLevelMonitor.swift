@@ -107,8 +107,8 @@ final class AudioLevelMonitor {
             Double(rms)
         )
 
-        let minDb = -60.0
-        let maxDb = 0.0
+        let minDb = -50.0
+        let maxDb = -10.0
 
         let normalized =
             (db - minDb) /

@@ -32,7 +32,7 @@ class RecordingCubit extends Cubit<RecordingState> {
 
   StreamSubscription<String>? _transcriptSubscription;
   StreamSubscription<int>? _progressSubscription;
-  StreamSubscription<double>? _streamSubscription;
+  StreamSubscription<double>? _audioLevelSubscription;
 
   RecordingCubit({
     required this.loadWhisperModel,
@@ -56,18 +56,20 @@ class RecordingCubit extends Cubit<RecordingState> {
       // emit(state.copyWith(transcriptedText: text));
       addWhisperText(text);
     });
-
-    _streamSubscription = audioLevelStream().listen((data) {
-      print("audio level $data");
-    });
   }
 
   void addAudioLevel(double data) {
     double audioLevel = double.tryParse(data.toStringAsFixed(2)) ?? 0;
+    emit(state.copyWith(audioLevel: audioLevel));
   }
 
   Future<void> startAudioRecording() async {
     emit(state.copyWith(isRecording: true));
+
+    _audioLevelSubscription = audioLevelStream().listen((data) {
+      print("audio level $data");
+      addAudioLevel(data);
+    });
 
     await startAudioLevelStream();
 
@@ -85,6 +87,8 @@ class RecordingCubit extends Cubit<RecordingState> {
 
   Future<void> stopAudioRecording() async {
     final data = await stopRecording();
+
+    _audioLevelSubscription?.cancel();
 
     data.fold(
       (l) {
@@ -176,7 +180,7 @@ class RecordingCubit extends Cubit<RecordingState> {
     stopwatch.stop();
     stopwatch.reset();
     _timer?.cancel();
-    _streamSubscription?.cancel();
+    _audioLevelSubscription?.cancel();
   }
 
   Future<void> loadWhisperModelCall() async {

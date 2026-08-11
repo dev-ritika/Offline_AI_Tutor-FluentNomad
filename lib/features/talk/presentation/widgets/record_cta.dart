@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:offline_ai_tutor/features/talk/presentation/cubit/recording_cubit.dart';
+import 'package:offline_ai_tutor/features/talk/presentation/cubit/recording_state.dart';
 import 'package:offline_ai_tutor/features/talk/presentation/widgets/record_cta_widget.dart';
 import 'package:offline_ai_tutor/features/talk/presentation/widgets/record_timer.dart';
 
@@ -31,7 +32,14 @@ class _RecordCtaState extends State<RecordCta> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        RecordCtaWidget(callback: tapAction),
+        BlocSelector<RecordingCubit, RecordingState, double>(
+          selector: (state) {
+            return isTapped ? state.audioLevel : 0;
+          },
+          builder: (context, data) {
+            return RecordCtaWidget(callback: tapAction, audioLevel: data);
+          },
+        ),
 
         //
         Text(isTapped ? "Tap to stop" : "Tap to start"),
