@@ -53,9 +53,9 @@ class HomeDataCubit extends Cubit<HomeDataState> with WidgetsBindingObserver {
           state.copyWith(
             streakDays: r?.streakDays,
             stateStatus: StateStatusEnum.loaded,
-            lastCompletedDate: r?.lastCompletedDate,
-            elapsedTime:
-                DateUtils.isSameDay(r?.lastCompletedDate!, DateTime.now())
+            lastGoalCompletedDate: r?.lastCompletedDate,
+            lastActiveDate: r?.lastActiveDate,
+            elapsedTime: DateUtils.isSameDay(r?.lastActiveDate!, DateTime.now())
                 ? r?.elapsedTimeToday
                 : 0,
           ),
@@ -68,17 +68,19 @@ class HomeDataCubit extends Cubit<HomeDataState> with WidgetsBindingObserver {
     int time = state.elapsedTime;
     int streakDays = state.streakDays;
 
+    print("last elaosed time ${time}");
+
     if (time >= GlobalConsts.kDailyGoalMinutes ||
-        (state.lastCompletedDate != null &&
+        (state.lastGoalCompletedDate != null &&
             DateUtils.isSameDay(
-              state.lastCompletedDate ?? DateTime.now(),
+              state.lastGoalCompletedDate ?? DateTime.now(),
               DateTime.now(),
             ))) {
       return;
     }
 
     if (DateUtils.dateOnly(DateTime.now()).difference(
-          state.lastCompletedDate ?? DateUtils.dateOnly(DateTime.now()),
+          state.lastGoalCompletedDate ?? DateUtils.dateOnly(DateTime.now()),
         ) >
         const Duration(days: 1)) {
       streakDays = 0;
@@ -93,7 +95,7 @@ class HomeDataCubit extends Cubit<HomeDataState> with WidgetsBindingObserver {
         HomeData(
           streakDays: state.streakDays,
           elapsedTimeToday: time,
-          lastCompletedDate: DateUtils.dateOnly(DateTime.now()),
+          lastActiveDate: DateUtils.dateOnly(DateTime.now()),
         ),
       );
 
@@ -103,6 +105,7 @@ class HomeDataCubit extends Cubit<HomeDataState> with WidgetsBindingObserver {
             streakDays: state.streakDays + 1,
             elapsedTimeToday: time,
             lastCompletedDate: DateUtils.dateOnly(DateTime.now()),
+            lastActiveDate: DateUtils.dateOnly(DateTime.now()),
           ),
         );
 

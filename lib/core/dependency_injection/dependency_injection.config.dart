@@ -415,21 +415,6 @@ extension GetItInjectableX on _i174.GetIt {
         getUserDataSource: gh<_i861.GetUserDataSource>(),
       ),
     );
-    gh.factory<_i3.RecordingCubit>(
-      () => _i3.RecordingCubit(
-        loadWhisperModel: gh<_i949.LoadWhisperModel>(),
-        startRecording: gh<_i861.StartRecording>(),
-        stopRecording: gh<_i211.StopRecording>(),
-        convertAudio: gh<_i1000.ConvertAudio>(),
-        transcribeAudio: gh<_i504.TranscribeAudio>(),
-        transcriptionProgressStream: gh<_i180.TranscriptionProgressStream>(),
-        cancelTranscription: gh<_i602.CancelTranscription>(),
-        transcriptionAudioStream: gh<_i982.TranscriptionAudioStream>(),
-        audioLevelStream: gh<_i829.AudioLevelStream>(),
-        startAudioLevelStream: gh<_i402.StartAudioLevelStream>(),
-        stopAudioLevelStream: gh<_i983.StopAudioLevelStream>(),
-      ),
-    );
     gh.lazySingleton<_i247.SaveModelInstallStatus>(
       () => _i247.SaveModelInstallStatus(
         saveUserDataRepository: gh<_i255.SaveModelInstallStatusrepository>(),
@@ -448,6 +433,21 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i327.GetHomeData>(
       () => _i327.GetHomeData(
         getHomeDataRepository: gh<_i651.GetHomeDataRepository>(),
+      ),
+    );
+    gh.factory<_i3.RecordingCubit>(
+      () => _i3.RecordingCubit(
+        loadWhisperModel: gh<_i949.LoadWhisperModel>(),
+        startRecording: gh<_i861.StartRecording>(),
+        stopRecording: gh<_i211.StopRecording>(),
+        convertAudio: gh<_i1000.ConvertAudio>(),
+        transcribeAudio: gh<_i504.TranscribeAudio>(),
+        transcriptionProgressStream: gh<_i180.TranscriptionProgressStream>(),
+        cancelTranscription: gh<_i602.CancelTranscription>(),
+        transcriptionAudioStream: gh<_i982.TranscriptionAudioStream>(),
+        startAudioLevelStream: gh<_i402.StartAudioLevelStream>(),
+        stopAudioLevelStream: gh<_i983.StopAudioLevelStream>(),
+        audioLevelStream: gh<_i829.AudioLevelStream>(),
       ),
     );
     gh.lazySingleton<_i546.GetModelInstallStatusRepository>(

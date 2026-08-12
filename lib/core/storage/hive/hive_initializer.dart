@@ -27,7 +27,7 @@ class HiveInitializerImpl implements HiveInitializer {
       ..registerAdapter(ModelInstallStatusAdapter());
 
     // await Hive.deleteBoxFromDisk(HiveBoxesNames.modeslInstallBox);
-    // await Hive.deleteBoxFromDisk(HiveBoxesNames.homeDataBox);
+    //await Hive.deleteBoxFromDisk(HiveBoxesNames.homeDataBox);
     // await Hive.deleteBoxFromDisk(HiveBoxesNames.userPrefsBox);
 
     await Future.wait([

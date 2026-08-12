@@ -20,19 +20,22 @@ class HomeDataModelAdapter extends TypeAdapter<HomeDataModel> {
       streakDays: (fields[0] as num).toInt(),
       elapsedTimeToday: (fields[1] as num?)?.toInt(),
       lastCompletedDate: fields[2] as DateTime?,
+      lastActiveDate: fields[3] as DateTime?,
     );
   }
 
   @override
   void write(BinaryWriter writer, HomeDataModel obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.streakDays)
       ..writeByte(1)
       ..write(obj.elapsedTimeToday)
       ..writeByte(2)
-      ..write(obj.lastCompletedDate);
+      ..write(obj.lastCompletedDate)
+      ..writeByte(3)
+      ..write(obj.lastActiveDate);
   }
 
   @override

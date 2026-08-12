@@ -14,10 +14,14 @@ class HomeDataModel {
   @HiveField(2)
   final DateTime? lastCompletedDate;
 
+  @HiveField(3)
+  final DateTime? lastActiveDate;
+
   HomeDataModel({
     required this.streakDays,
     required this.elapsedTimeToday,
     required this.lastCompletedDate,
+    required this.lastActiveDate,
   });
 
   factory HomeDataModel.fromJson(Map<String, dynamic> data) {
@@ -25,6 +29,7 @@ class HomeDataModel {
       streakDays: data['streakDays'],
       elapsedTimeToday: data['elapsedTimeToday'],
       lastCompletedDate: data['lastCompletedDate'],
+      lastActiveDate: data['lastActiveDate'],
     );
   }
 
@@ -33,6 +38,7 @@ class HomeDataModel {
       "streakDays": data.streakDays,
       "elapsedTimeToday": data.elapsedTimeToday,
       "lastCompletedDate": data.lastCompletedDate,
+      "lastActiveDate": data.lastActiveDate,
     };
   }
 
@@ -41,6 +47,7 @@ class HomeDataModel {
       streakDays: streakDays,
       elapsedTimeToday: elapsedTimeToday,
       lastCompletedDate: lastCompletedDate,
+      lastActiveDate: lastActiveDate,
     );
   }
 
@@ -49,6 +56,7 @@ class HomeDataModel {
       streakDays: data.streakDays,
       elapsedTimeToday: data.elapsedTimeToday,
       lastCompletedDate: data.lastCompletedDate,
+      lastActiveDate: data.lastActiveDate,
     );
   }
 }

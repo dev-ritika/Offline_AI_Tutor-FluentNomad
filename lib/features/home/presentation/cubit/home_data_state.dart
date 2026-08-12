@@ -6,13 +6,15 @@ class HomeDataState extends Equatable {
   final int streakDays;
   final StateStatusEnum stateStatus;
   final int elapsedTime;
-  final DateTime? lastCompletedDate;
+  final DateTime? lastGoalCompletedDate;
+  final DateTime? lastActiveDate;
 
   const HomeDataState({
     required this.streakDays,
     required this.stateStatus,
     required this.elapsedTime,
-    this.lastCompletedDate,
+    this.lastGoalCompletedDate,
+    this.lastActiveDate,
   });
 
   HomeDataState copyWith({
@@ -20,13 +22,16 @@ class HomeDataState extends Equatable {
     StateStatusEnum? stateStatus,
     int? elapsedTime,
     UserData? userData,
-    DateTime? lastCompletedDate,
+    DateTime? lastGoalCompletedDate,
+    DateTime? lastActiveDate,
   }) {
     return HomeDataState(
       streakDays: streakDays ?? this.streakDays,
       stateStatus: stateStatus ?? this.stateStatus,
       elapsedTime: elapsedTime ?? this.elapsedTime,
-      lastCompletedDate: lastCompletedDate ?? this.lastCompletedDate,
+      lastGoalCompletedDate:
+          lastGoalCompletedDate ?? this.lastGoalCompletedDate,
+      lastActiveDate: lastActiveDate ?? this.lastActiveDate,
     );
   }
 
@@ -35,6 +40,7 @@ class HomeDataState extends Equatable {
     streakDays,
     stateStatus,
     elapsedTime,
-    lastCompletedDate,
+    lastGoalCompletedDate,
+    lastActiveDate,
   ];
 }
