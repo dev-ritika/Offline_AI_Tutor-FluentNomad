@@ -69,8 +69,6 @@ class HomeDataCubit extends Cubit<HomeDataState> with WidgetsBindingObserver {
     int time = state.elapsedTime;
     int streakDays = state.streakDays;
 
-    print("last elaosed time ${state.lastGoalCompletedDate}");
-
     if (time >= GlobalConsts.kDailyGoalMinutes ||
         (state.lastGoalCompletedDate != null &&
             DateUtils.isSameDay(

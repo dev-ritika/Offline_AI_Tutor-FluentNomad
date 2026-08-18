@@ -52,7 +52,6 @@ class RecordingCubit extends Cubit<RecordingState> {
     });
 
     _transcriptSubscription = transcriptionAudioStream.getStream.listen((text) {
-      print("texttt $text");
       // emit(state.copyWith(transcriptedText: text));
       addWhisperText(text);
     });
@@ -127,24 +126,14 @@ class RecordingCubit extends Cubit<RecordingState> {
 
     int index = 0;
 
-    print("coming textt $text $index");
-
     _transcriptTimer = Timer.periodic(const Duration(milliseconds: 40), (
       timer,
     ) {
-      print("heree");
-
       if (index >= text.length) {
         timer.cancel();
 
-        print("here 1");
-
         return;
       }
-
-      print("coming textt 1 $text");
-
-      print("display textt ${_displayText}");
 
       _displayText += text[index];
 
