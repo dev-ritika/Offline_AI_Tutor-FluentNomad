@@ -38,8 +38,6 @@ class _RecordCtaWidgetState extends State<RecordCtaWidget>
   void didUpdateWidget(covariant RecordCtaWidget oldWidget) {
     audioLevel = 40 + (widget.audioLevel * 100);
 
-    print("widget.audioLevel ${audioLevel}");
-
     super.didUpdateWidget(oldWidget);
   }
 
